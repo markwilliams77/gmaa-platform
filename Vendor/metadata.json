@@ -1,0 +1,6 @@
+{
+  "name": "GMAA Vendor Dashboard",
+  "description": "Premium healthcare marketplace vendor portal for the Global Medical Assistance Alliance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
