@@ -17,8 +17,20 @@ import vendorDocumentsRoutes from "./routes/vendorDocuments.routes";
 import adminVerificationRoutes from "./routes/adminVerification.routes";
 import websitePublishingRoutes from "./routes/websitePublishing.routes";
 import uploadsRoutes from "./routes/uploads.routes";
+import helmet from "helmet";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
 
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+app.use(helmet());
+app.use(compression());
 
 const allowedOrigins = [
   "https://medalliance-frontend.vercel.app",
@@ -43,7 +55,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 // 🔥 must-have
