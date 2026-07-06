@@ -59,7 +59,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
   }, [selectedCategory]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/registry/vendors")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/registry/vendors`)
       .then(
         (
           res,

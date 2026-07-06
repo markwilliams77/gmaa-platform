@@ -2,7 +2,7 @@
  * GMAA Client-Side API Integration Layer
  * Integrates the React frontend with the multi-module Express backend.
  */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const api = (path: string) => `${API_BASE}${path}`;
 
