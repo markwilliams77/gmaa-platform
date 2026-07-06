@@ -78,6 +78,13 @@ app.use("/api/admin/verifications", adminVerificationRoutes);
 app.use("/api/admin/website-publishing", websitePublishingRoutes);
 app.use("/api/uploads", uploadsRoutes);
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
 app.get("/", async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -97,4 +104,23 @@ app.get("/check", (req, res) => {
   res.json({ route: "working" });
 });
 
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+);
 export default app;
