@@ -1,30 +1,22 @@
 import { Request, Response } from "express";
 import { generateDocumentKey } from "../utils/s3";
-import {
-  generateUploadUrl,
-  getBucketName,
-} from "../services/document.service";
+import { generateUploadUrl, getBucketName } from "../services/document.service";
 
 export const generatePresignedUploadUrl = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
-    const {
-      module,
-      ownerId,
-      folder,
-      fileName,
-      contentType,
-    } = req.body;
+    const { module, ownerId, folder, fileName, contentType } = req.body;
 
-    if (
-      !module ||
-      !ownerId ||
-      !folder ||
-      !fileName ||
-      !contentType
-    ) {
+    const user = (req as any).user;
+    if (user.role === "VENDOR" && ownerId !== user.vendorId) {
+      return res.status(403).json({
+        message: "You can only upload files for your own account.",
+      });
+    }
+
+    if (!module || !ownerId || !folder || !fileName || !contentType) {
       return res.status(400).json({
         message:
           "module, ownerId, folder, fileName and contentType are required",
@@ -38,16 +30,9 @@ export const generatePresignedUploadUrl = async (
       fileName,
     });
 
-    const bucketType =
-      module === "website"
-        ? "public"
-        : "private";
+    const bucketType = module === "website" ? "public" : "private";
 
-    const uploadUrl = await generateUploadUrl(
-      bucketType,
-      key,
-      contentType
-    );
+    const uploadUrl = await generateUploadUrl(bucketType, key, contentType);
 
     const bucketName = getBucketName(bucketType);
 
