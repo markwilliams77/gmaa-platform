@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
 import { prisma } from "../configs/db";
 
-export const sendMessage = async (
-  req: Request,
-  res: Response
-) => {
+export const sendMessage = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
 
     const threadId = Array.isArray(req.params.threadId)
-  ? req.params.threadId[0]
-  : req.params.threadId;
+      ? req.params.threadId[0]
+      : req.params.threadId;
     const { content } = req.body;
 
     if (!threadId) {
@@ -30,6 +27,20 @@ export const sendMessage = async (
         id: threadId,
       },
     });
+
+    if (user.role === "VENDOR") {
+      const vendor = await prisma.vendor.findFirst({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!vendor || thread?.vendorId !== vendor.id) {
+        return res.status(403).json({
+          message: "Unauthorized",
+        });
+      }
+    }
 
     if (!thread) {
       return res.status(404).json({
@@ -61,10 +72,7 @@ export const sendMessage = async (
   }
 };
 
-export const getMessages = async (
-  req: Request,
-  res: Response
-) => {
+export const getMessages = async (req: Request, res: Response) => {
   try {
     const threadId = Array.isArray(req.params.threadId)
       ? req.params.threadId[0]
@@ -116,10 +124,7 @@ export const getMessages = async (
   }
 };
 
-export const getThreads = async (
-  req: Request,
-  res: Response
-) => {
+export const getThreads = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
 
