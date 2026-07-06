@@ -281,9 +281,6 @@ export const submitBid = async (req: Request, res: Response) => {
       vendor.user.vendorStatus === "ACTIVE" &&
       vendor.mainCategory?.toLowerCase() === tender.mainCategory?.toLowerCase();
 
-      console.log("Vendor category:", vendor.mainCategory);
-console.log("Tender category:", tender.mainCategory);
-
     if (!isEligible) {
       return res.status(403).json({
         message: "You are not eligible to bid on this tender",

@@ -1,7 +1,7 @@
 import express from "express";
 import { prisma } from "../configs/db";
 import { sendOTP, verifyOTP } from "../services/otpService";
-import { vendorLogin, adminLogin, createAdmin, resetVendorPassword,} from "../controllers/auth.controllers"; 
+import { vendorLogin, adminLogin,resetVendorPassword,} from "../controllers/auth.controllers"; 
 
 const router = express.Router();
 
@@ -34,7 +34,6 @@ const getPhoneMatches = (rawPhone: string, normalizedPhone: string) => {
 router.post("/vendor-login", vendorLogin);
 router.post("/admin-login", adminLogin);
 router.post("/login", adminLogin);
-router.post("/create-admin", createAdmin);
 router.post( "/reset-vendor-password", resetVendorPassword );
 
 router.post("/send-otp", async (req, res) => {

@@ -178,34 +178,6 @@ export const adminLogin = async (req: Request, res: Response) => {
   }
 };
 
-export const createAdmin = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const passwordHash = await bcrypt.hash(
-      "admin123",
-      10
-    );
-
-    const admin = await prisma.user.create({
-      data: {
-        email: "admin@globalmaa.com",
-        password: passwordHash,
-        role: "ADMIN",
-      },
-    });
-
-    return res.json(admin);
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      message: "Failed to create admin",
-    });
-  }
-};
-
 export const resetVendorPassword = async (
   req: Request,
   res: Response
