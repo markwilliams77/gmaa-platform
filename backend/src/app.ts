@@ -35,6 +35,7 @@ app.use(compression());
 const allowedOrigins = [
   "https://medalliance-frontend.vercel.app",
   "https://global-maa-backend-app-vwh5.vercel.app",
+  "https://gmaa-platform.vercel.app",
   "https://globalmaa.com",
   "https://www.globalmaa.com",
   "http://localhost:3000",
