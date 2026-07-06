@@ -9,7 +9,6 @@ import { useAuth } from './components/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
-  console.log("API BASE:", import.meta.env.VITE_API_BASE_URL);
   const { loading } = useAuth();
 
   if (loading) {
