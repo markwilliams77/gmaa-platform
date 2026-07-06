@@ -8,14 +8,14 @@ import {
 
 export const authService = {
   generateAdminCredentials: async (secret: string): Promise<AdminGenerateResponse> => {
-    const response = await api.post<AdminGenerateResponse>('/api/auth/admin/generate', {
+    const response = await api.post<AdminGenerateResponse>('/auth/admin/generate', {
       secret,
     });
     return response.data;
   },
 
   login: async (identifier: string, password: string): Promise<AuthLoginResponse> => {
-    const response = await api.post<AuthLoginResponse>('/api/auth/login', {
+    const response = await api.post<AuthLoginResponse>('/auth/login', {
       identifier,
       password,
     } as AuthLoginRequest);

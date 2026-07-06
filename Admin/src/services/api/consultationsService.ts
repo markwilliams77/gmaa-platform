@@ -3,7 +3,7 @@ import { Consultation, UpdateConsultationRequest } from '../../types';
 
 export const consultationsService = {
   getConsultations: async (): Promise<{ success: boolean; consultations: Consultation[] }> => {
-    const response = await api.get('/api/consultations');
+    const response = await api.get('/consultations');
     return response.data;
   },
 
@@ -12,14 +12,14 @@ export const consultationsService = {
     request: UpdateConsultationRequest
   ): Promise<{ success: boolean; consultationId: string }> => {
     const response = await api.patch(
-      `/api/consultations/${consultationId}`,
+      `/consultations/${consultationId}`,
       request
     );
     return response.data;
   },
 
   getConsultationById: async (consultationId: string): Promise<Consultation> => {
-    const response = await api.get(`/api/consultations/${consultationId}`);
+    const response = await api.get(`/consultations/${consultationId}`);
     return response.data.consultation;
   },
 
@@ -27,7 +27,7 @@ export const consultationsService = {
   consultationId: string
 ): Promise<any> => {
   const response = await api.post(
-    `/api/consultations/${consultationId}/convert-to-lead`
+    `/consultations/${consultationId}/convert-to-lead`
   );
 
   return response.data;

@@ -211,7 +211,7 @@ async function startServer() {
   // ==================== AUTH ENDPOINTS ====================
 
   // Generate admin credentials
-  app.post('/api/auth/admin/generate', (req: Request, res: Response) => {
+  app.post('/auth/admin/generate', (req: Request, res: Response) => {
     const { secret } = req.body;
     
     if (secret !== process.env.ADMIN_GENERATION_SECRET) {
@@ -230,10 +230,10 @@ async function startServer() {
   });
 
   // Login
-  app.post('/api/auth/login', async (req: Request, res: Response) => {
+  app.post('/auth/login', async (req: Request, res: Response) => {
   try {
     const response = await axios.post(
-      'http://localhost:5000/api/auth/login',
+      '${import.meta.env.VITE_API_BASE_URL}/auth/login',
       req.body
     );
 
@@ -251,10 +251,10 @@ async function startServer() {
 });
   // ==================== TENDERS ENDPOINTS ====================
 
-  app.get('/api/tenders', async (req: Request, res: Response) => {
+  app.get('/tenders', async (req: Request, res: Response) => {
   try {
     const response = await axios.get(
-      'http://localhost:5000/api/tenders',
+      '`${import.meta.env.VITE_API_BASE_URL}/tenders',
       {
         headers: {
           Authorization: req.headers.authorization,
@@ -276,7 +276,7 @@ async function startServer() {
   }
 });
 
-  app.post('/api/tenders', authMiddleware, async (req: Request, res: Response) => {
+  app.post('/tenders', authMiddleware, async (req: Request, res: Response) => {
     const { tenderData, vendorEmails, broadcast } = req.body;
     
     const tenderId = `T-${String(tenders.length + 1).padStart(3, '0')}`;
@@ -323,7 +323,7 @@ async function startServer() {
     res.status(201).json({ success: true, tenderId, broadcast: !!broadcast, message: 'Tender created' });
   });
 
-  app.put('/api/tenders/:tenderId', authMiddleware, (req: Request, res: Response) => {
+  app.put('/tenders/:tenderId', authMiddleware, (req: Request, res: Response) => {
     const { tenderId } = req.params;
     const updates = req.body;
     
@@ -339,10 +339,10 @@ async function startServer() {
 
   // ==================== BIDS ENDPOINTS ====================
 
-  app.get('/api/bids', async (req: Request, res: Response) => {
+  app.get('/bids', async (req: Request, res: Response) => {
   try {
     const response = await axios.get(
-      'http://localhost:5000/api/bids',
+      '`${import.meta.env.VITE_API_BASE_URL}/bids',
       {
         headers: {
           Authorization: req.headers.authorization,
@@ -365,7 +365,7 @@ async function startServer() {
   }
 });
 
-  app.put('/api/bids/:bidId', authMiddleware, (req: Request, res: Response) => {
+  app.put('/bids/:bidId', authMiddleware, (req: Request, res: Response) => {
     const { bidId } = req.params;
     const updates = req.body;
     
@@ -381,13 +381,13 @@ async function startServer() {
 
   // ==================== VENDORS ENDPOINTS ====================
 
-  app.get('/api/vendors', authMiddleware, (req: Request, res: Response) => {
+  app.get('/vendors', authMiddleware, (req: Request, res: Response) => {
     res.status(200).json({ success: true, vendors });
   });
 
   // ==================== VENDOR ONBOARDING ENDPOINTS ====================
 
-  app.get('/api/admin/vendor-onboardings', authMiddleware, (req: Request, res: Response) => {
+  app.get('/admin/vendor-onboardings', authMiddleware, (req: Request, res: Response) => {
     const { status, paymentStatus, completedOnly } = req.query;
     
     let filtered = vendorOnboardings;
@@ -410,7 +410,7 @@ async function startServer() {
     });
   });
 
-  app.get('/api/admin/vendor-onboardings/:vendorId', authMiddleware, (req: Request, res: Response) => {
+  app.get('/admin/vendor-onboardings/:vendorId', authMiddleware, (req: Request, res: Response) => {
     const { vendorId } = req.params;
     
     const onboarding = vendorOnboardings.find(o => o.id === vendorId);
@@ -424,7 +424,7 @@ async function startServer() {
     });
   });
 
-  app.get('/api/admin/vendor-onboardings/:vendorId/documents/:documentType', authMiddleware, (req: Request, res: Response) => {
+  app.get('/admin/vendor-onboardings/:vendorId/documents/:documentType', authMiddleware, (req: Request, res: Response) => {
     const { vendorId, documentType } = req.params;
     
     const onboarding = vendorOnboardings.find(o => o.id === vendorId);
@@ -455,7 +455,7 @@ async function startServer() {
     });
   });
 
-  app.post('/api/admin/vendor-onboardings/:vendorId/approve', authMiddleware, (req: Request, res: Response) => {
+  app.post('/admin/vendor-onboardings/:vendorId/approve', authMiddleware, (req: Request, res: Response) => {
     const { vendorId } = req.params;
     const { status = 'ACTIVE' } = req.body;
     
@@ -487,7 +487,7 @@ async function startServer() {
     });
   });
 
-  app.post('/api/admin/vendor-onboardings/:vendorId/reject', authMiddleware, (req: Request, res: Response) => {
+  app.post('/admin/vendor-onboardings/:vendorId/reject', authMiddleware, (req: Request, res: Response) => {
     const { vendorId } = req.params;
     
     const onboarding = vendorOnboardings.find(o => o.id === vendorId);
@@ -506,11 +506,11 @@ async function startServer() {
 
   // ==================== SUPPORT TICKETS ENDPOINTS ====================
 
-  app.get('/api/support-tickets', authMiddleware, (req: Request, res: Response) => {
+  app.get('/support-tickets', authMiddleware, (req: Request, res: Response) => {
     res.status(200).json({ success: true, tickets: supportTickets });
   });
 
-  app.post('/api/support-tickets/:ticketId/messages', authMiddleware, (req: Request, res: Response) => {
+  app.post('/support-tickets/:ticketId/messages', authMiddleware, (req: Request, res: Response) => {
     const { ticketId } = req.params;
     const { text, sender, senderName } = req.body;
     
@@ -528,11 +528,11 @@ async function startServer() {
 
   // ==================== CONSULTATIONS ENDPOINTS ====================
 
-  app.get('/api/consultations', authMiddleware, (req: Request, res: Response) => {
+  app.get('/consultations', authMiddleware, (req: Request, res: Response) => {
     res.status(200).json({ success: true, consultations });
   });
 
-  app.put('/api/consultations/:consultationId', authMiddleware, (req: Request, res: Response) => {
+  app.put('/consultations/:consultationId', authMiddleware, (req: Request, res: Response) => {
     const { consultationId } = req.params;
     const updates = req.body;
     
@@ -548,7 +548,7 @@ async function startServer() {
 
   // ==================== LEADS ENDPOINTS ====================
 
-  app.post('/api/leads/:leadId/messages', authMiddleware, (req: Request, res: Response) => {
+  app.post('/leads/:leadId/messages', authMiddleware, (req: Request, res: Response) => {
     const { leadId } = req.params;
     const { text, sender, senderName } = req.body;
     
@@ -559,7 +559,7 @@ async function startServer() {
 
   // ==================== SYSTEM ENDPOINTS ====================
 
-  app.post('/api/system/seed', authMiddleware, (req: Request, res: Response) => {
+  app.post('/system/seed', authMiddleware, (req: Request, res: Response) => {
     // Seed demo data
     tenders = [
       {
@@ -639,7 +639,7 @@ async function startServer() {
     res.status(200).json({ success: true, message: 'Demo data seeded' });
   });
 
-  app.post('/api/system/purge', authMiddleware, (req: Request, res: Response) => {
+  app.post('/system/purge', authMiddleware, (req: Request, res: Response) => {
     tenders = [];
     bids = [];
     supportTickets = [];

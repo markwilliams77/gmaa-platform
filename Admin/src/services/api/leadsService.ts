@@ -14,18 +14,18 @@ type CreateLeadRequest = {
 
 export const leadsService = {
   getLeads: async () => {
-    const response = await api.get("/api/leads");
+    const response = await api.get("/leads");
     return response.data;
   },
 
   getLeadById: async (leadId: string) => {
-    const response = await api.get(`/api/leads/${leadId}`);
+    const response = await api.get(`/leads/${leadId}`);
 
     return response.data;
   },
 
   createLead: async (request: CreateLeadRequest) => {
-    const response = await api.post("/api/leads", request);
+    const response = await api.post("/leads", request);
 
     return response.data;
   },
@@ -36,7 +36,7 @@ export const leadsService = {
       routingType: "DIRECT" | "TENDER";
     },
   ) => {
-    const response = await api.patch(`/api/leads/${leadId}/routing`, request);
+    const response = await api.patch(`/leads/${leadId}/routing`, request);
 
     return response.data;
   },
@@ -45,18 +45,18 @@ export const leadsService = {
     leadId: string,
     message: LeadMessage,
   ): Promise<{ success: boolean; messageId: string }> => {
-    const response = await api.post(`/api/leads/${leadId}/messages`, message);
+    const response = await api.post(`/leads/${leadId}/messages`, message);
     return response.data;
   },
 
   getLeadNotes: async (leadId: string) => {
-    const response = await api.get(`/api/leads/${leadId}/notes`);
+    const response = await api.get(`/leads/${leadId}/notes`);
 
     return response.data;
   },
 
   createLeadNote: async (leadId: string, note: string) => {
-    const response = await api.post(`/api/leads/${leadId}/notes`, {
+    const response = await api.post(`/leads/${leadId}/notes`, {
       note,
     });
 
@@ -64,7 +64,7 @@ export const leadsService = {
   },
 
   assignVendor: async (leadId: string, vendorId: string) => {
-    const response = await api.patch(`/api/leads/${leadId}/assign-vendor`, {
+    const response = await api.patch(`/leads/${leadId}/assign-vendor`, {
       vendorId,
     });
 

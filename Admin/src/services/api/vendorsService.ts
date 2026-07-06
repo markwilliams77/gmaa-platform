@@ -13,12 +13,12 @@ import {
 export const vendorsService = {
   // Existing vendor endpoints
   getVendors: async (): Promise<{ data: Vendor[] }> => {
-    const response = await api.get("/api/vendors/admin/vendors");
+    const response = await api.get("/vendors/admin/vendors");
     return response.data;
   },
 
   getVendorById: async (vendorId: string): Promise<Vendor> => {
-    const response = await api.get(`/api/vendors/${vendorId}`);
+    const response = await api.get(`/vendors/${vendorId}`);
     return response.data.vendor;
   },
 
@@ -40,7 +40,7 @@ export const vendorsService = {
     params.append("completedOnly", String(completedOnly));
 
     const response = await api.get(
-      `/api/vendors/admin/vendor-onboardings?${params.toString()}`,
+      `/vendors/admin/vendor-onboardings?${params.toString()}`,
     );
     return response.data;
   },
@@ -53,7 +53,7 @@ export const vendorsService = {
     vendorId: string,
   ): Promise<GetVendorOnboardingResponse> => {
     const response = await api.get(
-      `/api/vendors/admin/vendor-onboardings/${vendorId}`,
+      `/vendors/admin/vendor-onboardings/${vendorId}`,
     );
     return response.data;
   },
@@ -69,7 +69,7 @@ export const vendorsService = {
     remarks?: string,
   ): Promise<ApproveVendorResponse> => {
     const response = await api.patch(
-      `/api/admin/verifications/${vendorId}/approve`,
+      `/admin/verifications/${vendorId}/approve`,
       {
         status,
         remarks,
@@ -87,7 +87,7 @@ export const vendorsService = {
     remarks: string,
   ): Promise<RejectVendorResponse> => {
     const response = await api.patch(
-      `/api/admin/verifications/${vendorId}/reject`,
+      `/admin/verifications/${vendorId}/reject`,
       {
         remarks,
       },
@@ -109,7 +109,7 @@ export const vendorsService = {
       | "tax_identification",
   ): Promise<DocumentResponse> => {
     const response = await api.get(
-      `/api/vendors/admin/vendor-onboardings/${vendorId}/documents/${documentType}`,
+      `/vendors/admin/vendor-onboardings/${vendorId}/documents/${documentType}`,
     );
     return response.data;
   },
@@ -118,7 +118,7 @@ export const vendorsService = {
     vendorStatus: "ACTIVE" | "SUSPENDED" | "REJECTED",
   ) => {
     const response = await api.patch(
-      `/api/vendors/admin/vendors/${vendorId}/status`,
+      `/vendors/admin/vendors/${vendorId}/status`,
       {
         vendorStatus,
       },

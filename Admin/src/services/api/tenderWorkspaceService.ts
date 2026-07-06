@@ -3,7 +3,7 @@ import api from "./client";
 export const tenderWorkspaceService = {
   getThreads: async () => {
     const response = await api.get(
-      "/api/support/threads"
+      "/support/threads"
     );
 
     return response.data;
@@ -13,7 +13,7 @@ export const tenderWorkspaceService = {
     threadId: string
   ) => {
     const response = await api.get(
-      `/api/support/${threadId}/messages`
+      `/support/${threadId}/messages`
     );
 
     return response.data;
@@ -24,7 +24,7 @@ export const tenderWorkspaceService = {
     content: string
   ) => {
     const response = await api.post(
-      `/api/support/${threadId}/messages`,
+      `/support/${threadId}/messages`,
       {
         content,
       }

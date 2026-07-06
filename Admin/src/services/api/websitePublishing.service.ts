@@ -12,14 +12,14 @@ export interface WebsitePublishingVendor {
 
 export const websitePublishingService = {
   getVendors: async (): Promise<WebsitePublishingVendor[]> => {
-    const response = await api.get("/api/admin/website-publishing/vendors");
+    const response = await api.get("/admin/website-publishing/vendors");
 
     return response.data;
   },
 
   getWebsiteProfile: async (vendorId: string) => {
     const response = await api.get(
-      `/api/admin/website-publishing/vendors/${vendorId}`,
+      `/admin/website-publishing/vendors/${vendorId}`,
     );
 
     return response.data;
@@ -27,7 +27,7 @@ export const websitePublishingService = {
 
   updateWebsiteProfile: async (vendorId: string, payload: any) => {
     const response = await api.patch(
-      `/api/admin/website-publishing/vendors/${vendorId}`,
+      `/admin/website-publishing/vendors/${vendorId}`,
       payload,
     );
 
@@ -36,7 +36,7 @@ export const websitePublishingService = {
 
   getWebsiteServices: async (vendorId: string) => {
     const response = await api.get(
-      `/api/admin/website-publishing/vendors/${vendorId}/services`,
+      `/admin/website-publishing/vendors/${vendorId}/services`,
     );
 
     return response.data;
@@ -44,7 +44,7 @@ export const websitePublishingService = {
 
   createWebsiteService: async (vendorId: string, payload: any) => {
     const response = await api.post(
-      `/api/admin/website-publishing/vendors/${vendorId}/services`,
+      `/admin/website-publishing/vendors/${vendorId}/services`,
       payload,
     );
 
@@ -53,7 +53,7 @@ export const websitePublishingService = {
 
   updateWebsiteService: async (serviceId: string, payload: any) => {
     const response = await api.patch(
-      `/api/admin/website-publishing/services/${serviceId}`,
+      `/admin/website-publishing/services/${serviceId}`,
       payload,
     );
 
@@ -61,11 +61,11 @@ export const websitePublishingService = {
   },
 
   deleteWebsiteService: async (serviceId: string) => {
-    await api.delete(`/api/admin/website-publishing/services/${serviceId}`);
+    await api.delete(`/admin/website-publishing/services/${serviceId}`);
   },
   getWebsiteAccreditations: async (vendorId: string) => {
     const response = await api.get(
-      `/api/admin/website-publishing/vendors/${vendorId}/accreditations`,
+      `/admin/website-publishing/vendors/${vendorId}/accreditations`,
     );
 
     return response.data;
@@ -73,7 +73,7 @@ export const websitePublishingService = {
 
   createWebsiteAccreditation: async (vendorId: string, payload: any) => {
     const response = await api.post(
-      `/api/admin/website-publishing/vendors/${vendorId}/accreditations`,
+      `/admin/website-publishing/vendors/${vendorId}/accreditations`,
       payload,
     );
 
@@ -82,7 +82,7 @@ export const websitePublishingService = {
 
   updateWebsiteAccreditation: async (accreditationId: string, payload: any) => {
     const response = await api.patch(
-      `/api/admin/website-publishing/accreditations/${accreditationId}`,
+      `/admin/website-publishing/accreditations/${accreditationId}`,
       payload,
     );
 
@@ -91,12 +91,12 @@ export const websitePublishingService = {
 
   deleteWebsiteAccreditation: async (accreditationId: string) => {
     await api.delete(
-      `/api/admin/website-publishing/accreditations/${accreditationId}`,
+      `/admin/website-publishing/accreditations/${accreditationId}`,
     );
   },
   getWebsiteGallery: async (vendorId: string) => {
     const response = await api.get(
-      `/api/admin/website-publishing/vendors/${vendorId}/gallery`,
+      `/admin/website-publishing/vendors/${vendorId}/gallery`,
     );
 
     return response.data;
@@ -104,7 +104,7 @@ export const websitePublishingService = {
 
   createWebsiteGalleryImage: async (vendorId: string, payload: any) => {
     const response = await api.post(
-      `/api/admin/website-publishing/vendors/${vendorId}/gallery`,
+      `/admin/website-publishing/vendors/${vendorId}/gallery`,
       payload,
     );
 
@@ -113,7 +113,7 @@ export const websitePublishingService = {
 
   updateWebsiteGalleryImage: async (galleryId: string, payload: any) => {
     const response = await api.patch(
-      `/api/admin/website-publishing/gallery/${galleryId}`,
+      `/admin/website-publishing/gallery/${galleryId}`,
       payload,
     );
 
@@ -121,12 +121,12 @@ export const websitePublishingService = {
   },
 
   deleteWebsiteGalleryImage: async (galleryId: string) => {
-    await api.delete(`/api/admin/website-publishing/gallery/${galleryId}`);
+    await api.delete(`/admin/website-publishing/gallery/${galleryId}`);
   },
 
   getWebsiteTestimonials: async (vendorId: string) => {
     const response = await api.get(
-      `/api/admin/website-publishing/vendors/${vendorId}/testimonials`,
+      `/admin/website-publishing/vendors/${vendorId}/testimonials`,
     );
 
     return response.data;
@@ -134,7 +134,7 @@ export const websitePublishingService = {
 
   createWebsiteTestimonial: async (vendorId: string, payload: any) => {
     const response = await api.post(
-      `/api/admin/website-publishing/vendors/${vendorId}/testimonials`,
+      `/admin/website-publishing/vendors/${vendorId}/testimonials`,
       payload,
     );
 
@@ -143,7 +143,7 @@ export const websitePublishingService = {
 
   updateWebsiteTestimonial: async (testimonialId: string, payload: any) => {
     const response = await api.patch(
-      `/api/admin/website-publishing/testimonials/${testimonialId}`,
+      `/admin/website-publishing/testimonials/${testimonialId}`,
       payload,
     );
 
@@ -152,7 +152,7 @@ export const websitePublishingService = {
 
   deleteWebsiteTestimonial: async (testimonialId: string) => {
     await api.delete(
-      `/api/admin/website-publishing/testimonials/${testimonialId}`,
+      `/admin/website-publishing/testimonials/${testimonialId}`,
     );
   },
 };

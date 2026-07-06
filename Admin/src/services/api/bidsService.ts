@@ -15,7 +15,7 @@ export const bidsService = {
     params.append("vendorId", vendorId);
 
   const response = await api.get(
-    `/api/bids${
+    `/bids${
       params.toString()
         ? `?${params.toString()}`
         : ""
@@ -29,7 +29,7 @@ getTenderBids: async (
   tenderId: string
 ): Promise<Bid[]> => {
   const response = await api.get(
-    `/api/tenders/${tenderId}/bids`
+    `/tenders/${tenderId}/bids`
   );
 
   return response.data;
@@ -39,12 +39,12 @@ getTenderBids: async (
     bidId: string,
     request: UpdateBidRequest
   ): Promise<{ success: boolean; bidId: string }> => {
-    const response = await api.put(`/api/bids/${bidId}`, request);
+    const response = await api.put(`/bids/${bidId}`, request);
     return response.data;
   },
 
   getBidById: async (bidId: string): Promise<Bid> => {
-    const response = await api.get(`/api/bids/${bidId}`);
+    const response = await api.get(`/bids/${bidId}`);
     return response.data.bid;
   },
 };

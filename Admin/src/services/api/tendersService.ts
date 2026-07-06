@@ -8,7 +8,7 @@ import {
 
 export const tendersService = {
   getTenders: async (): Promise<{ success: boolean; tenders: Tender[] }> => {
-  const response = await api.get('/api/tenders');
+  const response = await api.get('/tenders');
 
   return {
     success: true,
@@ -22,7 +22,7 @@ export const tendersService = {
     request: CreateTenderRequest
   ): Promise<CreateTenderResponse> => {
     const response = await api.post<CreateTenderResponse>(
-      '/api/tenders',
+      '/tenders',
       request
     );
     return response.data;
@@ -30,7 +30,7 @@ export const tendersService = {
 
   broadcastTender: async (tenderId: string) => {
   const response = await api.patch(
-    `/api/tenders/${tenderId}/broadcast`
+    `/tenders/${tenderId}/broadcast`
   );
 
   return response.data;
@@ -40,7 +40,7 @@ export const tendersService = {
     tenderId: string,
     request: UpdateTenderRequest
   ): Promise<{ success: boolean; tenderId: string }> => {
-    const response = await api.put(`/api/tenders/${tenderId}`, request);
+    const response = await api.put(`/tenders/${tenderId}`, request);
     return response.data;
   },
 
@@ -49,7 +49,7 @@ awardBid: async (
   bidId: string
 ) => {
   const response = await api.patch(
-    `/api/tenders/${tenderId}/award/${bidId}`
+    `/tenders/${tenderId}/award/${bidId}`
   );
 
   return response.data;
@@ -57,7 +57,7 @@ awardBid: async (
 
   getTenderById: async (tenderId: string) => {
   const response = await api.get(
-    `/api/tenders/${tenderId}`
+    `/tenders/${tenderId}`
   );
 
   return response.data;
@@ -68,7 +68,7 @@ requestRebid: async (
   vendorIds: string[],
 ) => {
   const response = await api.patch(
-    `/api/tenders/${tenderId}/rebid`,
+    `/tenders/${tenderId}/rebid`,
     {
       vendorIds,
     },

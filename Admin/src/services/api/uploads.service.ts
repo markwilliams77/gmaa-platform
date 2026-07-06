@@ -8,7 +8,7 @@ export const uploadsService = {
     file: File
   ) => {
     const response = await api.post(
-      "/api/uploads/presigned-url",
+      "/uploads/presigned-url",
       {
         module,
         ownerId,

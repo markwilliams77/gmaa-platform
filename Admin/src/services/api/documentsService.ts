@@ -5,7 +5,7 @@ export const documentsService = {
     threadId: string
   ) => {
     const response = await api.get(
-      `/api/documents/workspace/${threadId}`
+      `/documents/workspace/${threadId}`
     );
 
     return response.data.documents;
@@ -17,7 +17,7 @@ export const documentsService = {
   contentType: string
 ) => {
   const response = await api.post(
-    "/api/documents/upload-url",
+    "/documents/upload-url",
     {
       leadId: threadId,
       fileName,
@@ -32,7 +32,7 @@ createWorkspaceDocument: async (
   payload: any
 ) => {
   const response = await api.post(
-    "/api/documents/workspace",
+    "/documents/workspace",
     payload
   );
 
@@ -43,7 +43,7 @@ deleteWorkspaceDocument: async (
   id: string
 ) => {
   const response = await api.delete(
-    `/api/documents/workspace/${id}`
+    `/documents/workspace/${id}`
   );
 
   return response.data;
