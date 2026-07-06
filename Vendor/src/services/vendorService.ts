@@ -3,13 +3,13 @@ import { api } from "./api";
 export const vendorService = {
 
   getMe: async () => {
-  const response = await api.get("/api/vendor/me");
+  const response = await api.get("/vendor/me");
   return response.data;
 },
 
   getTenders: async () => {
     const response = await api.get(
-      "/api/vendor/tenders"
+      "/vendor/tenders"
     );
 
     return response.data;
@@ -17,7 +17,7 @@ export const vendorService = {
 
   getMyTenders: async () => {
     const response = await api.get(
-        "/api/vendor/my-tenders"
+        "/vendor/my-tenders"
     );
     return response.data;
 }, 
@@ -28,7 +28,7 @@ export const vendorService = {
   proposal?: string
 ) => {
   const response = await api.post(
-    "/api/vendor/bids",
+    "/vendor/bids",
     {
       tenderId,
       amount,
@@ -41,7 +41,7 @@ export const vendorService = {
 
 getConsultations: async () => {
   const response = await api.get(
-    "/api/vendor/consultations"
+    "/vendor/consultations"
   );
 
   return response.data;
@@ -52,7 +52,7 @@ updateConsultationStatus: async (
   status: string
 ) => {
   const response = await api.patch(
-    `/api/vendor/consultations/${id}/status`,
+    `/vendor/consultations/${id}/status`,
     {
       status,
     }
@@ -65,7 +65,7 @@ getWorkspaceDocuments: async (
   threadId: string
 ) => {
   const response = await api.get(
-    `/api/documents/workspace/${threadId}`
+    `/documents/workspace/${threadId}`
   );
 
   return response.data.documents;
@@ -75,7 +75,7 @@ getMessages: async (
   threadId: string
 ) => {
   const response = await api.get(
-    `/api/support/${threadId}/messages`
+    `/support/${threadId}/messages`
   );
 
   return response.data;
@@ -86,7 +86,7 @@ sendMessage: async (
   content: string
 ) => {
   const response = await api.post(
-    `/api/support/${threadId}/messages`,
+    `/support/${threadId}/messages`,
     {
       content,
     }
@@ -101,7 +101,7 @@ getUploadUrl: async (
   contentType: string
 ) => {
   const response = await api.post(
-    "/api/documents/upload-url",
+    "/documents/upload-url",
     {
       leadId: threadId,
       fileName,
@@ -116,7 +116,7 @@ createWorkspaceDocument: async (
   payload: any
 ) => {
   const response = await api.post(
-    "/api/documents/workspace",
+    "/documents/workspace",
     payload
   );
 
@@ -127,7 +127,7 @@ deleteWorkspaceDocument: async (
   id: string
 ) => {
   const response = await api.delete(
-    `/api/documents/workspace/${id}`
+    `/documents/workspace/${id}`
   );
 
   return response.data;
@@ -140,7 +140,7 @@ uploadVendorDocument: async (
 ) => {
   // Step 1 - Get signed upload URL
   const uploadResponse = await api.post(
-    "/api/vendor-documents/upload-url",
+    "/vendor-documents/upload-url",
     {
       folder,
       fileName: file.name,
@@ -161,7 +161,7 @@ uploadVendorDocument: async (
 
   // Step 3 - Save document record
   const response = await api.post(
-    "/api/vendor-documents",
+    "/vendor-documents",
     {
       documentType,
       fileName: file.name,
@@ -175,7 +175,7 @@ uploadVendorDocument: async (
 
 getVendorDocuments: async () => {
   const response = await api.get(
-    "/api/vendor-documents/me"
+    "/vendor-documents/me"
   );
 
   return response.data.documents;
@@ -185,7 +185,7 @@ deleteVendorDocument: async (
   id: string
 ) => {
   const response = await api.delete(
-    `/api/vendor-documents/${id}`
+    `/vendor-documents/${id}`
   );
 
   return response.data;
@@ -193,7 +193,7 @@ deleteVendorDocument: async (
 
 submitVerification: async () => {
   const response = await api.post(
-    "/api/vendor/verification/submit"
+    "/vendor/verification/submit"
   );
 
   return response.data;
