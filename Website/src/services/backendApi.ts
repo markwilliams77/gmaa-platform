@@ -2,7 +2,9 @@
  * GMAA Client-Side API Integration Layer
  * Integrates the React frontend with the multi-module Express backend.
  */
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+const api = (path: string) => `${API_BASE}${path}`;
 
 export interface Consultation {
   id?: string;
@@ -152,7 +154,7 @@ export const backendApi = {
     role?: string;
     specializations?: string[];
   }): Promise<any> {
-    const res = await fetch("/api/users/sync", {
+    const res = await fetch(api("/users/sync"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -162,7 +164,7 @@ export const backendApi = {
   },
 
   async fetchVendors(): Promise<any[]> {
-    const res = await fetch("/api/users/role/vendors");
+    const res = await fetch(api("/users/role/vendors"));
     if (!res.ok) return [];
     return res.json();
   },
@@ -186,7 +188,7 @@ export const backendApi = {
 
   // Tenders
   async fetchTenders(): Promise<Tender[]> {
-    const res = await fetch("/api/tenders");
+    const res = await fetch(api("/tenders"));
     if (!res.ok) return [];
     return res.json();
   },
@@ -195,7 +197,7 @@ export const backendApi = {
     tenderData: Omit<Tender, "id">,
     vendorEmails: string[],
   ): Promise<any> {
-    const res = await fetch("/api/tenders", {
+    const res = await fetch(api("/tenders"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tenderData, vendorEmails }),
@@ -206,13 +208,13 @@ export const backendApi = {
 
   // Bids
   async fetchBids(): Promise<Bid[]> {
-    const res = await fetch("/api/bids");
+    const res = await fetch(api("/bids"));
     if (!res.ok) return [];
     return res.json();
   },
 
   async submitBid(bidData: Omit<Bid, "id">): Promise<Bid> {
-    const res = await fetch("/api/bids", {
+    const res = await fetch(api("/bids"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bidData),
@@ -223,7 +225,7 @@ export const backendApi = {
 
   // Support Tickets
   async fetchSupportTickets(): Promise<SupportTicket[]> {
-    const res = await fetch("/api/support-tickets");
+    const res = await fetch(api("/support-tickets"));
     if (!res.ok) return [];
     return res.json();
   },
@@ -231,7 +233,7 @@ export const backendApi = {
   async submitSupportTicket(
     ticketData: Omit<SupportTicket, "id">,
   ): Promise<SupportTicket> {
-    const res = await fetch("/api/support-tickets", {
+    const res = await fetch(api("/support-tickets"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(ticketData),
@@ -266,13 +268,13 @@ export const backendApi = {
 
   // Conversations / Chat overlay
   async fetchChats(): Promise<ChatThread[]> {
-    const res = await fetch("/api/chats");
+    const res = await fetch(api("/chats"));
     if (!res.ok) return [];
     return res.json();
   },
 
   async initiateChat(chatData: Omit<ChatThread, "id">): Promise<ChatThread> {
-    const res = await fetch("/api/chats", {
+    const res = await fetch(api("/chats"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(chatData),
