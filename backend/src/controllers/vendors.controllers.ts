@@ -609,9 +609,9 @@ export const submitVendorOnboarding = async (req: Request, res: Response) => {
     const hasAllDocs = [...validDocumentTypes].every((type) =>
       Boolean(documents[type]),
     );
-    //if (!hasAllDocs) {
-    //return res.status(400).json({ message: "All required documents must be uploaded before submission" });
-    //}
+    if (!hasAllDocs) {
+    return res.status(400).json({ message: "All required documents must be uploaded before submission" });
+    }
     //if (vendor.paymentStatus !== "COMPLETED") {
     //  return res.status(400).json({ message: "Payment must be completed before submission" });
     //}
