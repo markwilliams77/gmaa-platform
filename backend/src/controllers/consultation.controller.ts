@@ -173,20 +173,20 @@ export const convertConsultationToLead = async (
     const leadNumber = `GMAA-${year}-${String(leadCount + 1).padStart(4, "0")}`;
 
     const lead = await prisma.lead.create({
-      data: {
-        leadNumber,
-        name: consultation.name,
-        email: consultation.email,
-        patientPhone: consultation.phone,
-        serviceCategory: consultation.service,
-        country: consultation.country,
-        state: consultation.state,
-        city: consultation.city,
-        source: "HOMEPAGE_ENQUIRY",
-        leadType: "DIRECT",
-        routingType: "DIRECT",
-      },
-    });
+  data: {
+    leadNumber,
+    name: consultation.name || "Unknown",
+    email: consultation.email,
+    patientPhone: consultation.phone || null,
+    serviceCategory: consultation.service || "Not Specified",
+    country: consultation.country || "N/A",
+    state: consultation.state || "N/A",
+    city: consultation.city || "N/A",
+    source: "HOMEPAGE_ENQUIRY",
+    leadType: "DIRECT",
+    routingType: "DIRECT",
+  },
+});
 
     await createLeadActivity({
       leadId: lead.id,
