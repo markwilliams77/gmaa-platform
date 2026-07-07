@@ -173,20 +173,20 @@ export const convertConsultationToLead = async (
     const leadNumber = `GMAA-${year}-${String(leadCount + 1).padStart(4, "0")}`;
 
     const lead = await prisma.lead.create({
-  data: {
-    leadNumber,
-    name: consultation.name || "Unknown",
-    email: consultation.email,
-    patientPhone: consultation.phone || null,
-    serviceCategory: consultation.service || "Not Specified",
-    country: consultation.country || "N/A",
-    state: consultation.state || "N/A",
-    city: consultation.city || "N/A",
-    source: "HOMEPAGE_ENQUIRY",
-    leadType: "DIRECT",
-    routingType: "DIRECT",
-  },
-});
+      data: {
+        leadNumber,
+        name: consultation.name || "Unknown",
+        email: consultation.email,
+        patientPhone: consultation.phone || null,
+        serviceCategory: consultation.service || "Not Specified",
+        country: consultation.country || "N/A",
+        state: consultation.state || "N/A",
+        city: consultation.city || "N/A",
+        source: "HOMEPAGE_ENQUIRY",
+        leadType: "DIRECT",
+        routingType: "DIRECT",
+      },
+    });
 
     await createLeadActivity({
       leadId: lead.id,
@@ -207,10 +207,16 @@ export const convertConsultationToLead = async (
       lead,
     });
   } catch (error) {
-    console.error("convertConsultationToLead error:", error);
+    //console.error("convertConsultationToLead error:", error);
+    console.error("🔥 CONVERT LEAD ERROR FULL:", error);
+    console.error("🔥 STACK:", (error as any)?.stack);
 
     return res.status(500).json({
       message: "Failed to convert consultation",
+      error: (error as any)?.message,
     });
+    //return res.status(500).json({
+    //message: "Failed to convert consultation",
+    //});
   }
 };
