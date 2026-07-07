@@ -531,10 +531,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       console.log("THREADS OK", threadsRes);
       setThreads(threadsRes);
 
-      console.log("BIDS START");
-      const bidsRes = await bidsService.getBids();
-      console.log("BIDS OK", bidsRes);
-
       console.log("VENDORS START");
       const vendorsRes = await vendorsService.getVendors();
       console.log("VENDORS OK", vendorsRes);
