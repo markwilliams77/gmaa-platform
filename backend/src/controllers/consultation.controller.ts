@@ -206,16 +206,10 @@ export const convertConsultationToLead = async (
       lead,
     });
   } catch (error) {
-    //console.error("convertConsultationToLead error:", error);
-    console.error("🔥 CONVERT LEAD ERROR FULL:", error);
-    console.error("🔥 STACK:", (error as any)?.stack);
+    console.error("convertConsultationToLead error:", error);
 
     return res.status(500).json({
-      message: "Failed to convert consultation",
-      error: (error as any)?.message,
+    message: "Failed to convert consultation",
     });
-    //return res.status(500).json({
-    //message: "Failed to convert consultation",
-    //});
   }
 };
