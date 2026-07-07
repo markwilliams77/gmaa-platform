@@ -180,7 +180,6 @@ export const convertConsultationToLead = async (
         patientPhone: consultation.phone || null,
         serviceCategory: consultation.service || "Not Specified",
         country: consultation.country || "N/A",
-        state: consultation.state || "N/A",
         city: consultation.city || "N/A",
         source: "HOMEPAGE_ENQUIRY",
         leadType: "DIRECT",
