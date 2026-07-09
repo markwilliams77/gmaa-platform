@@ -1,6 +1,5 @@
-const viteEnv = (import.meta as any).env || {};
-
-const API_BASE_URL = viteEnv.VITE_API_BASE_URL || 'http://localhost:4000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 type ApiResult<T> = { data: T };
 

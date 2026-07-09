@@ -112,10 +112,6 @@
   @apply text-[10px] uppercase tracking-[0.3em] font-bold opacity-50;
 }
 
-html {
-  font-size: 12px;
-}
-
 .phone-input {
   display: flex;
   align-items: center;

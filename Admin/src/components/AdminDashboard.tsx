@@ -3130,10 +3130,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <button
             key={consultation.id}
             onClick={() => {
-  console.log(consultation);
-  setSelectedConsultation(consultation);
-}}
-            
+              console.log(consultation);
+              setSelectedConsultation(consultation);
+            }}
             className="rounded-3xl border border-navy/5 bg-white p-5 text-left shadow-sm transition hover:shadow-xl md:p-6"
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

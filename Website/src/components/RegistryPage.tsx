@@ -12,10 +12,9 @@ import {
 } from "lucide-react";
 import VendorCard from "./VendorCard";
 import type { RegistryVendor } from "../types/registry";
-import { buildSearchIndex } from "../search/buildSearchIndex";
-import { search } from "../search";
 import { VENDOR_CATEGORIES } from "../constants/vendorCategories";
 import { Country } from "country-state-city";
+import { getRegistryVendors } from "../services/registry";
 
 interface RegistryPageProps {
   onSelectVendor?: (id: string) => void;
@@ -23,7 +22,9 @@ interface RegistryPageProps {
 
 export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("search") ?? "",
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   const [vendors, setVendors] = useState<RegistryVendor[]>([]);
@@ -58,24 +59,34 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
     return category.subCategories.map((sub) => sub.name);
   }, [selectedCategory]);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/registry/vendors`)
-      .then(
-        (
-          res,
-        ): Promise<{
-          data: RegistryVendor[];
-        }> => res.json(),
-      )
-      .then(({ data }) => {
-        setVendors(data);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-        buildSearchIndex(data);
+  const urlSearch = searchParams.get("search") ?? "";
+
+  if (urlSearch !== searchQuery) {
+    setSearchQuery(urlSearch);
+    return;
+  }
+
+  useEffect(() => {
+    setLoading(true);
+
+    getRegistryVendors({
+      page,
+      limit: 8,
+      search: searchQuery || undefined,
+      category: selectedCategory || undefined,
+      country: selectedCountry || undefined,
+    })
+      .then(({ data, pagination }) => {
+        setVendors(data);
+        setTotalPages(pagination.totalPages);
       })
-      .catch((err) => {
-        console.error("Failed to load vendors", err);
-      });
-  }, []);
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [page, searchQuery, selectedCategory, selectedCountry]);
 
   const setSelectedCategory = (category: string | null) => {
     const nextParams = new URLSearchParams(searchParams);
@@ -84,6 +95,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
     } else {
       nextParams.delete("category");
     }
+    setPage(1);
     setSearchParams(nextParams);
   };
 
@@ -95,38 +107,9 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
     } else {
       nextParams.delete("country");
     }
-
+    setPage(1);
     setSearchParams(nextParams);
   };
-
-  const filteredVendors = useMemo(() => {
-    const result = search(searchQuery);
-
-    return result.vendors.filter((vendor) => {
-      const matchesCategory =
-        !selectedCategory ||
-        vendor.mainCategory
-          .toLowerCase()
-          .includes(selectedCategory.toLowerCase());
-
-      const matchesSubCategory =
-        !selectedSubCategory ||
-        vendor.subCategory
-          .toLowerCase()
-          .includes(selectedSubCategory.toLowerCase());
-
-      const matchesCountry =
-        !selectedCountry || vendor.country === selectedCountry;
-
-      return matchesCategory && matchesSubCategory && matchesCountry;
-    });
-  }, [
-    vendors,
-    searchQuery,
-    selectedCategory,
-    selectedSubCategory,
-    selectedCountry,
-  ]);
 
   return (
     <div className="min-h-screen pt-24 md:pt-32 pb-24 bg-white relative">
@@ -165,7 +148,22 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                 type="text"
                 placeholder="Search by organization, service, specialty or country..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  setSearchQuery(value);
+                  setPage(1);
+
+                  const nextParams = new URLSearchParams(searchParams);
+
+                  if (value.trim()) {
+                    nextParams.set("search", value);
+                  } else {
+                    nextParams.delete("search");
+                  }
+
+                  setSearchParams(nextParams);
+                }}
                 className="w-full pl-16 pr-8 py-6 bg-white border border-navy/10 rounded-3xl outline-none text-navy font-medium shadow-lg shadow-slate-200/40 transition-all focus:border-brand-red focus:ring-4 focus:ring-brand-red/10"
               />
             </div>
@@ -445,6 +443,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                       setSearchQuery("");
 
                       setSearchParams(new URLSearchParams());
+                      setPage(1);
                     }}
                     className="text-brand-red text-[10px] font-bold uppercase tracking-widest hover:underline"
                   >
@@ -484,6 +483,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                       setSearchQuery("");
 
                       setSearchParams(new URLSearchParams());
+                      setPage(1);
                     }}
                   />
                 </span>
@@ -506,6 +506,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                       setSearchQuery("");
 
                       setSearchParams(new URLSearchParams());
+                      setPage(1);
                     }}
                   />
                 </span>
@@ -515,9 +516,9 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
         </div>
 
         {/* Grid Layout */}
-        {filteredVendors.length > 0 ? (
+        {vendors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 border-l border-t border-navy/5">
-            {filteredVendors.map((v) => (
+            {vendors.map((v) => (
               <VendorCard
                 key={v.id}
                 id={v.id}
@@ -561,10 +562,48 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                 setSearchQuery("");
 
                 setSearchParams(new URLSearchParams());
+                setPage(1);
               }}
               className="mt-10 inline-flex rounded-full bg-brand-red px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:bg-navy"
             >
               Clear filters & search
+            </button>
+          </div>
+        )}
+        {/* ========================= PAGINATION ========================= */}
+
+        {totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => setPage(pageNumber)}
+                  className={`h-10 w-10 rounded-xl text-sm font-semibold transition ${
+                    page === pageNumber
+                      ? "bg-navy text-white"
+                      : "border border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              ),
+            )}
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
             </button>
           </div>
         )}

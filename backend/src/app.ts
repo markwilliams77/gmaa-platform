@@ -20,6 +20,9 @@ import uploadsRoutes from "./routes/uploads.routes";
 import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
+import marketplaceSeederRoutes from "./routes/marketplaceSeeder.routes";
+import vendorCategoriesRoutes from "./routes/vendorCategories.routes";
+
 
 const app = express();
 const limiter = rateLimit({
@@ -29,7 +32,13 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use(limiter);
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    },
+  }),
+);
 app.use(compression());
 
 const allowedOrigins = [
@@ -79,6 +88,8 @@ app.use("/api/vendor-documents", vendorDocumentsRoutes);
 app.use("/api/admin/verifications", adminVerificationRoutes);
 app.use("/api/admin/website-publishing", websitePublishingRoutes);
 app.use("/api/uploads", uploadsRoutes);
+app.use("/api/marketplace", marketplaceSeederRoutes);
+app.use("/api/vendor-categories", vendorCategoriesRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({

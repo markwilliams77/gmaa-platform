@@ -54,6 +54,7 @@ model Vendor {
   vendorNumber  String?      @unique
   userId        String       @unique
   companyName   String
+  isMock        Boolean  @default(false)
   image         String?
   rating        Float?
   mainCategory  String?

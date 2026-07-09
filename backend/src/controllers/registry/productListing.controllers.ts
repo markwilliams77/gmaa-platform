@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../../configs/db";
+import { search as searchEngine } from "../../search";
 
 const DEFAULT_VENDOR_IMAGE = "https://via.placeholder.com/800";
 
@@ -80,45 +81,6 @@ export const getDirectoryVendors = async (req: Request, res: Response) => {
         vendorStatus: "ACTIVE" as const,
       },
 
-      ...(searchText && {
-        OR: [
-          {
-            companyName: {
-              contains: searchText,
-              mode: "insensitive" as const,
-            },
-          },
-          {
-            specialty: {
-              contains: searchText,
-              mode: "insensitive" as const,
-            },
-          },
-          {
-            mainCategory: {
-              contains: searchText,
-              mode: "insensitive" as const,
-            },
-          },
-          {
-            subCategory: {
-              contains: searchText,
-              mode: "insensitive" as const,
-            },
-          },
-          {
-            websiteServices: {
-              some: {
-                name: {
-                  contains: searchText,
-                  mode: "insensitive" as const,
-                },
-              },
-            },
-          },
-        ],
-      }),
-
       ...(categoryText && {
         OR: [
           {
@@ -154,68 +116,68 @@ export const getDirectoryVendors = async (req: Request, res: Response) => {
       }),
     };
 
-    const [vendors, total] = await prisma.$transaction([
-      prisma.vendor.findMany({
-        where,
-        select: {
-          id: true,
-          vendorNumber: true,
-          companyName: true,
-          country: true,
-          state: true,
-          city: true,
-          image: true,
-          mainCategory: true,
-          subCategory: true,
-          specialty: true,
-          rating: true,
+    const vendors = await prisma.vendor.findMany({
+      where,
+      select: {
+        id: true,
+        vendorNumber: true,
+        companyName: true,
+        country: true,
+        state: true,
+        city: true,
+        image: true,
+        mainCategory: true,
+        subCategory: true,
+        specialty: true,
+        rating: true,
 
-          websiteServices: {
-            orderBy: {
-              sortOrder: "asc",
-            },
-            select: {
-              name: true,
-            },
+        websiteServices: {
+          orderBy: {
+            sortOrder: "asc",
           },
-
-          websiteProfile: {
-            select: {
-              coverImage: true,
-            },
-          },
-
-          websiteAccreditations: {
-            orderBy: {
-              sortOrder: "asc",
-            },
-            select: {
-              title: true,
-            },
-          },
-
-          user: {
-            select: {
-              email: true,
-            },
+          select: {
+            name: true,
           },
         },
 
-        orderBy: {
-          companyName: "asc",
+        websiteProfile: {
+          select: {
+            coverImage: true,
+          },
         },
 
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
+        websiteAccreditations: {
+          orderBy: {
+            sortOrder: "asc",
+          },
+          select: {
+            title: true,
+          },
+        },
 
-      prisma.vendor.count({
-        where,
-      }),
-    ]);
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+
+      orderBy: {
+        companyName: "asc",
+      },
+    });
+
+    const searchResult = searchEngine(vendors, searchText);
+
+    const total = searchResult.vendors.length;
+
+    const paginatedVendors = searchResult.vendors.slice(
+      (page - 1) * limit,
+      page * limit,
+    );
 
     res.json({
-      data: vendors.map(mapVendorListItem),
+      data: paginatedVendors.map(mapVendorListItem),
 
       pagination: {
         page,

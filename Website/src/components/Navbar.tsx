@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   User,
@@ -80,7 +80,6 @@ const NAV_ITEMS = [
       },
     ],
   },
-
   {
     label: "Directory",
     children: [
@@ -104,14 +103,9 @@ const NAV_ITEMS = [
         description: "Diagnostic labs and imaging centres.",
         href: "/directory?category=diagnostics",
       },
-      {
-        title: "Doctors",
-        description: "Coming Soon",
-        href: "#",
-      },
+      { title: "Doctors", description: "Coming Soon", href: "#" },
     ],
   },
-
   {
     label: "Insights",
     children: [
@@ -147,7 +141,6 @@ const NAV_ITEMS = [
       },
     ],
   },
-
   {
     label: "About",
     children: [
@@ -173,11 +166,7 @@ const NAV_ITEMS = [
       },
     ],
   },
-
-  {
-    label: "Contact",
-    to: "/contact",
-  },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function Navbar({
@@ -191,7 +180,6 @@ export default function Navbar({
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { user } = useAuth();
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -199,21 +187,14 @@ export default function Navbar({
     localStorage.getItem("gmaa_client_verified") === "true";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Compute portal dynamically from url path
   const computedPortal =
-    portal ||
-    (location.pathname === "/vendor" || location.pathname.startsWith("/vendor/")
-      ? "vendor"
-      : "patient");
+    portal || (location.pathname.startsWith("/vendor") ? "vendor" : "patient");
 
-  // Compute currentView dynamically from url path
   const path = location.pathname;
   let activeView:
     | "home"
@@ -229,40 +210,44 @@ export default function Navbar({
   else if (path.startsWith("/vendors")) activeView = "vendors";
   else if (path.startsWith("/admin")) activeView = "admin";
 
+  // Dynamic Styles based on Scroll
+  const navTextColor = scrolled ? "text-navy" : "text-white";
+  const navIconColor = scrolled ? "text-navy/50" : "text-white/60";
+  const logoClass = scrolled ? "" : "brightness-0 invert";
+
   if (isAdminView) {
     return (
-      <nav className="fixed top-0 lg:left-80 right-0 z-50 h-20 md:h-24 bg-white/95 backdrop-blur-xl border-b border-navy/5 flex items-center shadow-sm">
-        <div className="w-full px-4 md:px-12 flex items-center justify-between">
-          <div className="flex items-center gap-8">
+      <nav className="fixed top-0 lg:left-80 right-0 z-50 h-20 bg-white/95 backdrop-blur-xl border-b border-navy/5 flex items-center shadow-sm">
+        <div className="w-full px-4 md:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-4 lg:gap-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-navy rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-navy rounded-xl flex items-center justify-center shrink-0">
                 <Activity className="text-brand-red animate-pulse" size={18} />
               </div>
-              <div className="hidden lg:flex flex-col">
-                <span className="text-xl font-bold text-navy leading-none tracking-tight uppercase">
+              <div className="hidden sm:flex flex-col">
+                <span className="text-lg font-bold text-navy leading-none tracking-tight uppercase">
                   GMAA <span className="text-brand-red">Admin</span>
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-navy/40">
+                <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-navy/40">
                   Verified Access
                 </span>
               </div>
             </div>
-            <div className="bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5 border border-emerald-500/20">
+            <div className="hidden xs:flex bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest items-center gap-1.5 border border-emerald-500/20">
               <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />
               Systems Online
             </div>
           </div>
-
-          <div className="flex items-center gap-6">
-            <div className="hidden xl:flex items-center gap-2 px-6 py-2.5 bg-slate-bg rounded-full border border-navy/5">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-navy/60">
+          <div className="flex items-center gap-3 md:gap-6">
+            <div className="hidden xl:flex items-center gap-2 px-4 py-2 bg-slate-bg rounded-full border border-navy/5">
+              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+              <span className="text-[9px] font-bold uppercase tracking-widest text-navy/60">
                 Secure Connection
               </span>
             </div>
             <Link
               to="/"
-              className="px-8 py-3 bg-navy text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-brand-red transition-all shadow-lg shadow-navy/20 active:scale-95 cursor-pointer text-center"
+              className="px-6 md:px-8 py-2.5 bg-navy text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-brand-red transition-all shadow-lg shadow-navy/20 active:scale-95 text-center"
             >
               Back to site
             </Link>
@@ -273,326 +258,220 @@ export default function Navbar({
   }
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "py-2 md:py-3 bg-white/80 backdrop-blur-xl shadow-xl shadow-navy/5 border-b border-navy/5"
-          : "py-4 md:py-6 bg-transparent"
-      }`}
-    >
-      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 flex items-center justify-between">
-        <div className="flex items-center gap-2 lg:gap-3">
-          {/* Logo - Matching Brand Identity */}
-          <Link
-            to={computedPortal === "vendor" ? "/vendor" : "/"}
-            className="group shrink-0"
-          >
-            <img
-              src="/images/gmaa-logo.png"
-              alt="GMAA"
-              className=" h-12 md:h-16 xl:h-[68px] w-auto object-contain transition-all duration-300 group-hover:scale-[1.02]"
-            />
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      scrolled ? "py-2 bg-white/90 backdrop-blur-xl shadow-xl shadow-navy/5 border-b border-navy/5" : "py-4 md:py-6 bg-transparent"
+    }`}>
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-16 flex items-center justify-between gap-4">
+        {/* Logo & Portal Switcher Group */}
+        <div className="flex items-center gap-4 xl:gap-8 shrink-0">
+          <Link to={computedPortal === "vendor" ? "/vendor" : "/"} className="group shrink-0">
+            <img src="/images/gmaa-logo.png" alt="GMAA" className="h-10 md:h-14 xl:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-[1.02]" />
           </Link>
 
-          {/* Desktop Portal Switcher */}
           <div className="hidden lg:block">
             <div className="relative flex items-center rounded-full border border-white/40 bg-white/55 backdrop-blur-xl p-1 shadow-lg shadow-navy/5 overflow-hidden">
-              {/* Animated Active Pill */}
-
               <motion.div
                 layout
-                transition={{
-                  type: "spring",
-                  stiffness: 450,
-                  damping: 35,
-                }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 className={`absolute top-1 bottom-1 rounded-full bg-navy shadow-lg ${
-                  computedPortal === "patient"
-                    ? "left-1 w-[108px]"
-                    : "left-[109px] w-[108px]"
+                  computedPortal === "patient" ? "left-1 w-[90px] xl:w-[108px]" : "left-[91px] xl:left-[109px] w-[90px] xl:w-[108px]"
                 }`}
               />
-
-              {/* Patients */}
-
-              <Link
-                to="/"
-                className="relative z-10 flex items-center justify-center gap-2 w-[108px] py-2.5"
-              >
-                <User
-                  size={14}
-                  className={`transition-colors duration-300 ${
-                    computedPortal === "patient"
-                      ? "text-brand-red"
-                      : "text-navy/45"
-                  }`}
-                />
-
-                <span
-                  className={`text-[10px] font-semibold tracking-wide transition-colors duration-300 ${
-                    computedPortal === "patient" ? "text-white" : "text-navy/60"
-                  }`}
-                >
-                  Patients
-                </span>
+              {/* Patients Toggle */}
+              <Link to="/" className="relative z-10 flex items-center justify-center gap-2 w-[90px] xl:w-[108px] py-2">
+                <User size={13} className={`transition-colors duration-300 ${computedPortal === "patient" ? "text-brand-red" : "text-navy/45"}`} />
+                <span className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${computedPortal === "patient" ? "text-white" : "text-navy/60"}`}>Patients</span>
               </Link>
-
-              {/* Vendors */}
-
-              <Link
-                to="/vendor"
-                className="relative z-10 flex items-center justify-center gap-2 w-[108px] py-2.5"
-              >
-                <Building2
-                  size={14}
-                  className={`transition-colors duration-300 ${
-                    computedPortal === "vendor"
-                      ? "text-brand-red"
-                      : "text-navy/45"
-                  }`}
-                />
-
-                <span
-                  className={`text-[10px] font-semibold tracking-wide transition-colors duration-300 ${
-                    computedPortal === "vendor" ? "text-white" : "text-navy/60"
-                  }`}
-                >
-                  Vendors
-                </span>
+              {/* Vendors Toggle */}
+              <Link to="/vendor" className="relative z-10 flex items-center justify-center gap-2 w-[90px] xl:w-[108px] py-2">
+                <Building2 size={13} className={`transition-colors duration-300 ${computedPortal === "vendor" ? "text-brand-red" : "text-navy/45"}`} />
+                <span className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${computedPortal === "vendor" ? "text-white" : "text-navy/60"}`}>Vendors</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Desktop Nav Links - Using Brand Red Accents */}
-        <div className="hidden lg:flex flex-1 items-center justify-between ml-10">
-          <div className="flex items-center gap-12">
-            {NAV_ITEMS.map((item) => (
+        {/* --- CENTER ZONE: NAV LINKS --- */}
+        <div className="hidden lg:flex flex-[2] items-center justify-center gap-x-6 xl:gap-x-10">
+          {NAV_ITEMS.map((item) => (
+            <div
+              key={item.label}
+              className="relative py-4"
+              onMouseEnter={() => item.children && setActiveMenu(item.label)}
+              onMouseLeave={() => setActiveMenu(null)}
+            >
               <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => item.children && setActiveMenu(item.label)}
-                onMouseLeave={() => setActiveMenu(null)}
+                className={`flex items-center gap-1.5 cursor-pointer text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-brand-red ${navTextColor}`}
               >
                 {item.to ? (
-                  <Link
-                    to={item.to}
-                    className="
-          flex
-          items-center
-          gap-1.5
-          text-[11px]
-          font-semibold
-          uppercase
-          tracking-[0.18em]
-          text-navy/55
-          hover:text-navy
-          transition-colors
-        "
-                  >
-                    {item.label}
-                  </Link>
+                  <Link to={item.to}>{item.label}</Link>
                 ) : (
-                  <>
-                    <div
-                      className="
-            group
-            flex
-            items-center
-            gap-1.5
-            cursor-pointer
-            text-[11px]
-            font-semibold
-            uppercase
-            tracking-[0.18em]
-            text-navy/55
-            hover:text-navy
-            transition-colors
-          "
-                    >
-                      <span>{item.label}</span>
-
-                      <ChevronDown
-                        size={14}
-                        className={`
-              transition-all duration-300
-              ${activeMenu === item.label ? "rotate-180 text-brand-red" : ""}
-            `}
-                      />
-                    </div>
-
-                    <DropdownMenu
-                      open={activeMenu === item.label}
-                      title={item.label}
-                      items={item.children ?? []}
-                    />
-                  </>
+                  <span>{item.label}</span>
+                )}
+                {!item.to && (
+                  <ChevronDown
+                    size={12}
+                    className={`transition-transform duration-300 ${activeMenu === item.label ? "rotate-180 text-brand-red" : navIconColor}`}
+                  />
                 )}
               </div>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-4 ml-12">
-            <button
-              onClick={() => {
-                if (computedPortal === "vendor") {
-                  window.location.href = "https://vendor.globalmaa.com";
-                  return;
-                }
-                if (isClientVerified) {
-                  navigate("/vendors");
-                  return;
-                }
-                onClientAccess?.();
-              }}
-              className={`relative group overflow-hidden px-4 lg:px-8 py-3 rounded-2xl text-[8px] lg:text-[10px] font-bold lg:font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] shadow-xl transition-all active:scale-95 ${
-                activeView === "vendors"
-                  ? "bg-cyan text-white shadow-cyan/20"
-                  : "bg-navy text-white shadow-navy/10"
-              }`}
-            >
-              <span className="relative z-10">
-                {computedPortal === "vendor"
-                  ? "Vendor Login"
-                  : activeView === "vendors"
-                    ? "Directory Open"
-                    : isClientVerified
-                      ? "Directory"
-                      : "Client Access"}
-              </span>
-              <div
-                className={`absolute inset-0 bg-brand-red translate-y-full group-hover:translate-y-0 transition-transform duration-500 ${activeView === "vendors" ? "hidden" : ""}`}
-              />
-            </button>
-
-            {computedPortal !== "vendor" && isClientVerified && (
-              <button
-                onClick={() => {
-                  localStorage.removeItem("gmaa_client_verified");
-                  localStorage.removeItem("gmaa_client_phone");
-                  navigate("/");
-                }}
-                className="px-4 lg:px-6 py-3 rounded-2xl text-[8px] lg:text-[10px] font-bold lg:font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] bg-white border border-navy/10 text-navy hover:bg-navy hover:text-white transition-all active:scale-95"
-              >
-                Logout
-              </button>
-            )}
-
-            {user && (
-              <button
-                onClick={onLogout}
-                className="p-3.5 rounded-2xl bg-navy text-white hover:bg-brand-red transition-all shadow-lg shadow-navy/10"
-                title="Sign Out"
-              >
-                <LogOut size={16} />
-              </button>
-            )}
-          </div>
+              {!item.to && (
+                <DropdownMenu
+                  open={activeMenu === item.label}
+                  title={item.label}
+                  items={item.children ?? []}
+                />
+              )}
+            </div>
+          ))}
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden p-2 text-navy"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-navy/5 p-8 flex flex-col gap-6 md:hidden z-40 overflow-y-auto max-h-[80vh]"
-        >
-          <div className="flex bg-slate-bg p-1 rounded-xl">
-            <Link
-              to="/"
-              onClick={() => setIsOpen(false)}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg ${
-                computedPortal === "patient"
-                  ? "bg-white shadow-sm text-navy font-bold"
-                  : "text-navy/50"
-              }`}
-            >
-              <User size={18} />
-              <span className="text-sm font-medium">Clients</span>
-            </Link>
-            <Link
-              to="/vendor"
-              onClick={() => setIsOpen(false)}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg ${
-                computedPortal === "vendor"
-                  ? "bg-white shadow-sm text-navy font-bold"
-                  : "text-navy/50"
-              }`}
-            >
-              <Building2 size={18} />
-              <span className="text-sm font-medium">Vendors</span>
-            </Link>
-          </div>
-          <Link
-            to="/directory"
-            onClick={() => setIsOpen(false)}
-            className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] text-left font-medium text-navy py-2 border-b border-navy/5"
-          >
-            Medical Categories
-          </Link>
-          <Link
-            to="/insights"
-            onClick={() => setIsOpen(false)}
-            className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] text-left font-medium text-navy py-2 border-b border-navy/5"
-          >
-            Network Insights
-          </Link>
-          {user &&
-            (user.email === "digitalised17@gmail.com" ||
-              user.email?.endsWith("@globalmaa.com")) && (
-              <Link
-                to="/admin"
-                onClick={() => setIsOpen(false)}
-                className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] text-left font-bold text-brand-red py-2 border-b border-navy/5 uppercase tracking-widest"
-              >
-                Admin Panel
-              </Link>
-            )}
-          <span className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] font-medium text-navy/40 py-2 border-b border-navy/5">
-            Medical Logistics
-          </span>
+        {/* --- RIGHT ZONE: ACTION BUTTONS --- */}
+        <div className="flex items-center justify-end gap-2 xl:gap-4 flex-1 shrink-0">
           <button
             onClick={() => {
-              if (
-                computedPortal === "vendor" &&
-                activeView === "home" &&
-                !user
-              ) {
-                onLogin?.();
-              } else {
-                navigate("/vendors");
+              if (computedPortal === "vendor") {
+                window.location.href = "https://vendor.globalmaa.com";
+                return;
               }
-              setIsOpen(false);
+              if (isClientVerified) {
+                navigate("/vendors");
+                return;
+              }
+              onClientAccess?.();
             }}
-            className="w-full bg-cyan text-white py-4 rounded-full font-bold mt-2 text-[11px] uppercase tracking-widest cursor-pointer shadow-lg shadow-cyan/20"
+            className={`relative group overflow-hidden px-4 xl:px-8 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest shadow-xl transition-all active:scale-95 ${
+              scrolled ? "bg-navy text-white" : "bg-white text-navy"
+            }`}
           >
-            {computedPortal === "vendor" && activeView === "home" && !user
-              ? "Vendor Login"
-              : "Access Network"}
+            <span className="relative z-10">
+              {computedPortal === "vendor"
+                ? "Vendor Login"
+                : isClientVerified
+                  ? "Directory"
+                  : "Client Access"}
+            </span>
+            <div className="absolute inset-0 bg-brand-red translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
           </button>
+
+          {isClientVerified && (
+            <button
+              onClick={() => {
+                localStorage.removeItem("gmaa_client_verified");
+                navigate("/");
+              }}
+              className={`px-4 xl:px-6 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest border transition-all ${
+                scrolled
+                  ? "border-navy/20 text-navy hover:bg-navy hover:text-white"
+                  : "border-white/30 text-white hover:bg-white hover:text-navy"
+              }`}
+            >
+              Logout
+            </button>
+          )}
 
           {user && (
             <button
-              onClick={() => {
-                onLogout?.();
-                setIsOpen(false);
-              }}
-              className="w-full flex items-center justify-center gap-2 py-4 text-brand-red font-bold uppercase tracking-widest text-xs border border-brand-red/10 rounded-xl hover:bg-brand-red/5 transition-all"
+              onClick={onLogout}
+              className="p-2.5 xl:p-3 rounded-xl bg-brand-red text-white shadow-lg active:scale-95"
             >
-              <LogOut size={16} /> Sign Out
+              <LogOut size={16} />
             </button>
           )}
-        </motion.div>
-      )}
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className={`lg:hidden p-2 transition-colors ${navTextColor}`}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-navy/5 p-6 flex flex-col gap-5 lg:hidden z-40 overflow-y-auto max-h-[85vh]"
+          >
+            <div className="flex bg-slate-bg p-1 rounded-xl">
+              <Link
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold transition-all ${computedPortal === "patient" ? "bg-white shadow-sm text-navy" : "text-navy/40"}`}
+              >
+                <User size={16} /> Patients
+              </Link>
+              <Link
+                to="/vendor"
+                onClick={() => setIsOpen(false)}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold transition-all ${computedPortal === "vendor" ? "bg-white shadow-sm text-navy" : "text-navy/40"}`}
+              >
+                <Building2 size={16} /> Vendors
+              </Link>
+            </div>
+            <div className="flex flex-col border-y border-navy/5 py-2">
+              <Link
+                to="/directory"
+                onClick={() => setIsOpen(false)}
+                className="text-sm font-semibold text-navy py-3"
+              >
+                Medical Categories
+              </Link>
+              <Link
+                to="/insights"
+                onClick={() => setIsOpen(false)}
+                className="text-sm font-semibold text-navy py-3"
+              >
+                Network Insights
+              </Link>
+              {user &&
+                (user.email === "digitalised17@gmail.com" ||
+                  user.email?.endsWith("@globalmaa.com")) && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm font-bold text-brand-red py-3 uppercase tracking-widest"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+            </div>
+            <button
+              onClick={() => {
+                if (
+                  computedPortal === "vendor" &&
+                  activeView === "home" &&
+                  !user
+                )
+                  onLogin?.();
+                else navigate("/vendors");
+                setIsOpen(false);
+              }}
+              className="w-full bg-navy text-white py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest shadow-lg active:scale-95"
+            >
+              {computedPortal === "vendor" && activeView === "home" && !user
+                ? "Vendor Login"
+                : "Access Network"}
+            </button>
+            {user && (
+              <button
+                onClick={() => {
+                  onLogout?.();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-4 text-brand-red font-bold uppercase tracking-widest text-[11px] border border-brand-red/10 rounded-xl"
+              >
+                <LogOut size={16} /> Sign Out
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
