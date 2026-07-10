@@ -46,7 +46,7 @@ function PatientHome() {
   const handleSourceVendors = (service?: string, region?: string) => {
     const params = new URLSearchParams();
 
-    if (service) params.set("service", service);
+    if (service) params.set("search", service);
     if (region) params.set("region", region);
 
     const targetUrl = `/vendors${params.toString() ? `?${params.toString()}` : ""}`;

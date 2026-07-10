@@ -16,12 +16,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const BACKGROUND_IMAGES = [
-  "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000",
-  "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=2000",
-  "https://images.unsplash.com/photo-1579154238337-142f360a7e6b?auto=format&fit=crop&q=80&w=2000",
-];
-
 interface HeroProps {
   onSourceVendors?: (service?: string, region?: string) => void;
   onPortalChange?: (portal: "patient" | "vendor") => void;
@@ -34,7 +28,6 @@ export default function Hero({
 }: HeroProps) {
   const [serviceSearch, setServiceSearch] = useState("");
   const [showServiceSuggestions, setShowServiceSuggestions] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
   const [hovered, setHovered] = useState<"care" | "vendor" | null>(null);
   const navigate = useNavigate();
 
@@ -43,13 +36,6 @@ export default function Hero({
       s.toLowerCase().includes(serviceSearch.toLowerCase()) &&
       s !== serviceSearch,
   );
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % BACKGROUND_IMAGES.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <div className="bg-white min-h-screen selection:bg-blue-600 selection:text-white">
@@ -117,7 +103,7 @@ export default function Hero({
 
                     if (!query) return;
 
-                    navigate(`/vendors?search=${encodeURIComponent(query)}`);
+                    onSourceVendors?.(query);
                   }}
                   className="w-full md:w-auto px-12 py-5 bg-white text-navy rounded-[24px] text-xs font-black uppercase tracking-[0.2em] hover:bg-cyan hover:text-white transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl"
                 >
