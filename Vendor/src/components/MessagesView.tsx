@@ -8,15 +8,8 @@ import {
   MessageSquare, 
   Search, 
   Send, 
-  Check, 
-  CheckCircle,
-  Bell, 
-  FileText, 
-  Star, 
+  ChevronRight, 
   ShieldCheck, 
-  Filter, 
-  Maximize2,
-  Trash2,
   CornerDownRight,
   Activity
 } from "lucide-react";
@@ -49,7 +42,7 @@ export default function MessagesView({
   const handleSelectThread = (threadId: string) => {
     setSelectedThreadId(threadId);
 
-    // Auto mark as read
+    // Auto mark as read (Preserves identical code functionality)
     setMessages(prev => prev.map(m => {
       if (m.threadId === threadId) {
         return { ...m, isRead: true };
@@ -62,7 +55,7 @@ export default function MessagesView({
     e.preventDefault();
     if (!composeText.trim() || !selectedChat) return;
 
-    // Append standard user response as another message under same threadId
+    // Append standard user response (Preserves identical state orchestration)
     const responseMessage: Message = {
       id: `msg_app_${Date.now()}`,
       sender: "Apex Management (You)",
@@ -93,53 +86,63 @@ export default function MessagesView({
     }, 1500);
   };
 
-  // Group text logs under same threadId for display in the right conversation pane
+  // Group text logs under same threadId for chronological display
   const chatLogs = messages
     .filter(m => m.threadId === (selectedChat?.threadId || ""))
     .slice()
     .reverse();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 animate-fade-in">
       
-      {/* Title */}
-      <div>
-        <h2 className="font-display text-2xl font-bold text-slate-900">Alliance Secure Inbox</h2>
-        <p className="text-xs text-slate-400 font-sans mt-0.5">
-          Unified point-to-point support threads, GMAA medical clearances, and critical system notifications.
-        </p>
+      {/* Title Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+        <div>
+          <div className="flex items-center gap-2 text-xs text-slate-400 font-sans uppercase tracking-widest">
+            <span>Marketplace Referrals</span>
+            <ChevronRight className="h-3 w-3 text-[#2E5B9A]" />
+            <span className="text-[#2E5B9A] font-semibold">Alliance Secure Inbox</span>
+          </div>
+          <h2 className="font-display text-2xl font-bold text-slate-900 mt-1">Direct Secure Mailbox</h2>
+          <p className="text-xs text-slate-400 font-sans mt-0.5">
+            Unified support threads, authorized medical clearances, and critical system notifications.
+          </p>
+        </div>
+        <div className="text-[10px] font-bold font-mono px-3 py-1.5 bg-blue-50 text-[#2E5B9A] border border-blue-100 rounded-lg uppercase tracking-wider self-start sm:self-auto">
+          TLS ENCRYPTED CHAT
+        </div>
       </div>
 
-      {/* Inbox view split grids */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch border border-slate-200/60 rounded-3xl overflow-hidden bg-white shadow-sm min-h-[600px]">
+      {/* Main Inbox split grid console */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch border border-slate-100 rounded-3xl overflow-hidden bg-white shadow-sm min-h-[620px]">
         
         {/* LEFT COLUMN PANEL: SENDER THREADS */}
-        <div className="lg:col-span-1 border-r border-slate-100 flex flex-col justify-between">
+        <div className="lg:col-span-1 border-r border-slate-100 flex flex-col justify-between select-none">
           
           <div className="p-4 space-y-4">
             
-            {/* Search bar */}
+            {/* HUD Search Input */}
             <div className="relative">
-              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 value={chatSearchText}
                 onChange={(e) => setChatSearchText(e.target.value)}
                 placeholder="Search secure threads, messages..."
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none transition-all font-sans"
+                className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#2E5B9A] focus:border-[#2E5B9A] transition-all font-sans"
               />
             </div>
 
-            {/* Category tabs */}
+            {/* Futuristic Source Filter Category Tabs */}
             <div className="flex flex-wrap gap-1">
               {["All", "Tender Support", "GMAA Messages", "System Notifications"].map(source => (
                 <button
                   key={source}
                   onClick={() => setActiveSourceFilter(source as any)}
-                  className={`px-2.5 py-1 rounded-lg text-3xs font-semibold uppercase tracking-wider font-display border transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider font-mono border transition-all ${
                     activeSourceFilter === source
-                      ? "bg-slate-900 border-slate-900 text-white"
-                      : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
+                      ? "bg-[#2E5B9A] border-[#2E5B9A] text-white shadow-sm"
+                      : "bg-white border-slate-200 text-slate-450 hover:border-blue-200 hover:text-slate-800"
                   }`}
                 >
                   {source === "All" ? "All Sources" : source.replace(" Messages", "")}
@@ -157,10 +160,10 @@ export default function MessagesView({
                 <p className="text-3xs mt-1">Try broadening your search term criteria.</p>
               </div>
             ) : (
-              // Filter out unique threads for list representations
+              // Unique Thread mapping (Preserves identical array reduction)
               Array.from(new Set(filteredMessages.map(m => m.threadId))).map(threadId => {
                 const threadMsgs = filteredMessages.filter(m => m.threadId === threadId);
-                const lastMsg = threadMsgs[0]; // first item represents latest because we prepend
+                const lastMsg = threadMsgs[0];
                 const hasUnread = threadMsgs.some(m => !m.isRead);
                 const isSelected = selectedChat?.threadId === threadId;
 
@@ -168,9 +171,9 @@ export default function MessagesView({
                   <div
                     key={threadId}
                     onClick={() => handleSelectThread(threadId)}
-                    className={`p-4 cursor-pointer hover:bg-slate-50 transition-all border-l-2 text-xs relative ${
+                    className={`p-4 cursor-pointer hover:bg-slate-50/50 transition-all border-l-2 text-xs relative ${
                       isSelected
-                        ? "bg-slate-50/85 border-cyan-400 text-slate-800"
+                        ? "bg-[#EBF3FC]/30 border-[#2E5B9A] text-slate-800"
                         : "border-transparent text-slate-500"
                     }`}
                   >
@@ -178,17 +181,17 @@ export default function MessagesView({
                       <div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="font-bold text-slate-900 font-display text-2xs truncate">{lastMsg.sender}</span>
-                          <span className={`text-4xs px-1.5 py-0.2 rounded font-mono font-bold ${
-                            lastMsg.source === "Tender Support" ? "bg-amber-50 text-amber-600 border border-amber-100" :
-                            lastMsg.source === "GMAA Messages" ? "bg-cyan-50 text-cyan-600 border border-cyan-100" :
-                            "bg-purple-50 text-purple-600 border border-purple-100"
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold border ${
+                            lastMsg.source === "Tender Support" ? "bg-amber-50 text-amber-600 border-amber-100" :
+                            lastMsg.source === "GMAA Messages" ? "bg-[#EBF3FC] text-[#2E5B9A] border-blue-100" :
+                            "bg-purple-50 text-purple-600 border-purple-100"
                           }`}>
-                            {lastMsg.source}
+                            {lastMsg.source.replace(" Messages", "")}
                           </span>
                         </div>
                         <p className="text-3xs text-slate-400 font-sans mt-0.5">{lastMsg.senderRole}</p>
                       </div>
-                      <span className="text-4xs font-mono text-slate-400">{lastMsg.timestamp}</span>
+                      <span className="text-[9px] font-mono text-slate-400">{lastMsg.timestamp}</span>
                     </div>
 
                     <p className="text-3xs text-slate-500 line-clamp-2 mt-2 leading-relaxed">
@@ -196,7 +199,7 @@ export default function MessagesView({
                     </p>
 
                     {hasUnread && (
-                      <span className="absolute bottom-4 right-4 h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                      <span className="absolute bottom-4 right-4 h-2 w-2 rounded-full bg-[#D91B24] animate-pulse" />
                     )}
                   </div>
                 );
@@ -205,41 +208,40 @@ export default function MessagesView({
           </div>
 
           {/* Secure indicator footer */}
-          <div className="bg-slate-50 p-3 border-t border-slate-100 flex items-center justify-between text-4xs font-mono tracking-widest text-slate-400">
+          <div className="bg-slate-50/80 p-3 border-t border-slate-100 flex items-center justify-between text-[9px] font-mono tracking-widest text-slate-400">
             <span>TLSv1.3 AES-GCM SECURE</span>
-            <span className="text-emerald-500">PORTAL COMPLIANT</span>
+            <span className="text-emerald-500 font-bold uppercase">Portal Compliant</span>
           </div>
 
         </div>
 
-        {/* RIGHT COLUMN PANEL: CHAT WINDOW LOG ACTIONS */}
-        <div className="lg:col-span-2 flex flex-col justify-between bg-slate-50/50">
+        {/* RIGHT COLUMN PANEL: CHAT WINDOW */}
+        <div className="lg:col-span-2 flex flex-col justify-between bg-slate-50/30">
           
           {selectedChat ? (
             <>
               {/* Window Header */}
-              <div className="p-4 bg-white border-b border-slate-100 flex items-center justify-between shadow-3xs">
+              <div className="p-4 bg-white border-b border-slate-100 flex items-center justify-between shadow-xs">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 text-xs font-bold font-sans bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center border border-slate-200">
+                  <div className="h-10 w-10 text-xs font-bold font-sans bg-slate-50 text-[#2E5B9A] border border-blue-100 rounded-xl flex items-center justify-center shadow-inner shrink-0">
                     {selectedChat.sender.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-950 font-display flex items-center gap-1.5">
+                    <h3 className="font-bold text-slate-900 font-display flex items-center gap-1.5 leading-normal">
                       {selectedChat.sender}
-                      <ShieldCheck className="h-4 w-4 text-cyan-500" />
+                      <ShieldCheck className="h-4.5 w-4.5 text-[#2E5B9A]" />
                     </h3>
-                    <p className="text-3xs text-slate-400 font-sans">{selectedChat.senderRole} • Ref: {selectedChat.threadId}</p>
+                    <p className="text-3xs text-slate-400 font-mono mt-0.5 uppercase tracking-wider">Role: {selectedChat.senderRole} • Ref Thread: {selectedChat.threadId}</p>
                   </div>
                 </div>
                 
-                {/* Meta Source */}
-                <span className="text-3xs font-semibold px-2 py-1 bg-slate-100 border border-slate-200 rounded text-slate-600">
+                <span className="text-3xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 bg-slate-50 border border-slate-150 rounded text-slate-500">
                   {selectedChat.source}
                 </span>
               </div>
 
-              {/* Chat log messages list */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[380px] custom-scrollbar">
+              {/* Chat Log Message Bubbles */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[380px] custom-scrollbar bg-slate-50/10">
                 {chatLogs.map((chat) => {
                   const isSelf = chat.sender.includes("(You)");
                   return (
@@ -247,21 +249,23 @@ export default function MessagesView({
                       key={chat.id} 
                       className={`flex gap-3 max-w-lg ${isSelf ? "ml-auto flex-row-reverse" : "mr-auto"}`}
                     >
-                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-3xs font-semibold border ${
-                        isSelf ? "bg-slate-900 border-slate-800 text-white" : "bg-white border-slate-200 text-slate-700"
+                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-[10px] font-bold border ${
+                        isSelf 
+                          ? "bg-[#EBF3FC] border-blue-100 text-[#2E5B9A]" 
+                          : "bg-white border-slate-200 text-slate-700"
                       }`}>
                         {isSelf ? "ME" : chat.sender.charAt(0)}
                       </div>
                       
                       <div className="space-y-1">
-                        <div className={`p-3 rounded-2xl text-xs leading-relaxed font-sans ${
+                        <div className={`p-3 rounded-2xl text-xs leading-relaxed font-sans shadow-2xs ${
                           isSelf 
-                            ? "bg-slate-900 text-white rounded-tr-none" 
-                            : "bg-white border border-slate-200 text-slate-700 rounded-tl-none shadow-3xs"
+                            ? "bg-gradient-to-br from-[#2E5B9A] to-[#3B62AD] text-white rounded-tr-none" 
+                            : "bg-white border border-slate-200/80 text-slate-700 rounded-tl-none"
                         }`}>
                           {chat.text}
                         </div>
-                        <p className={`text-4xs font-mono text-slate-400 ${isSelf ? "text-right" : "text-left"}`}>
+                        <p className={`text-[9px] font-mono text-slate-400 ${isSelf ? "text-right" : "text-left"}`}>
                           {chat.timestamp}
                         </p>
                       </div>
@@ -270,43 +274,43 @@ export default function MessagesView({
                 })}
               </div>
 
-              {/* Quick reply action form */}
-              <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-slate-200/80 space-y-3 shadow-3xs">
+              {/* Quick Evacuation Evac reply form */}
+              <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-slate-100 space-y-3">
                 
-                <div className="flex items-center gap-1.5 text-3xs font-semibold text-slate-400">
-                  <CornerDownRight className="h-3.5 w-3.5 text-cyan-400" />
-                  <span>Transmit quick response to {selectedChat.sender}</span>
+                <div className="flex items-center gap-1.5 text-3xs font-semibold text-slate-400 uppercase tracking-widest font-mono">
+                  <CornerDownRight className="h-3.5 w-3.5 text-[#2E5B9A]" />
+                  <span>Transmit Response to {selectedChat.sender}</span>
                 </div>
 
                 <div className="flex gap-2">
                   <textarea
                     required
                     rows={2}
-                    placeholder="Type hospital proposal amendment details, coordinator follow-ups here..."
+                    placeholder="Type surgical package details, referral queries, or bidding specifications here..."
                     value={composeText}
                     onChange={(e) => setComposeText(e.target.value)}
-                    className="flex-1 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500 font-sans"
+                    className="flex-1 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#2E5B9A] focus:border-[#2E5B9A] font-sans transition leading-relaxed resize-none"
                   />
                   <button
                     id="transmit-message-action"
                     type="submit"
-                    className="rounded-xl px-4 bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-center shrink-0 active:scale-95 transition-transform"
+                    className="rounded-xl px-5 bg-[#2E5B9A] hover:bg-[#3b6eae] text-white flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-md shadow-blue-500/10"
                   >
                     <Send className="h-4.5 w-4.5" />
                   </button>
                 </div>
 
-                <p className="text-4xs text-slate-300 font-sans italic text-right">
-                  *All interactions routed via GMAA secure network. HIPAA compliance policies apply.
+                <p className="text-[9px] text-slate-400 font-sans italic text-right">
+                  *All interactions logged under HIPAA compliance criteria.
                 </p>
 
               </form>
             </>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-xs text-slate-400">
-              <MessageSquare className="h-10 w-10 text-slate-300 mb-2" />
-              <p className="font-semibold text-slate-700">No Chat Thread Selected</p>
-              <p className="text-3xs">Click any active communication from the left panel listing.</p>
+            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-xs text-slate-400 bg-slate-50/50">
+              <MessageSquare className="h-10 w-10 text-slate-350 mb-2 animate-pulse" />
+              <p className="font-semibold text-slate-850">No Secure Chat Thread Selected</p>
+              <p className="text-3xs text-slate-400 mt-1">Select an active communication thread on the left pane.</p>
             </div>
           )}
 

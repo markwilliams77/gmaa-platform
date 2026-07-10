@@ -83,7 +83,7 @@ export default function App() {
       try {
         const response = await vendorService.getMe();
 
-        setIsApprovedVendor(response.user.vendorStatus === "ACTIVE")
+        setIsApprovedVendor(response.user.vendorStatus === "ACTIVE");
       } catch (error) {
         console.log("Vendor not found");
         setIsApprovedVendor(false);
@@ -317,7 +317,7 @@ export default function App() {
               {activeTab === ActiveTab.Analytics && <AnalyticsView />}
 
               {activeTab === ActiveTab.ProfileManagement && (
-                <OrganizationProfileView />
+                <OrganizationProfileView/>
               )}
 
               {/* Shared settings / placeholders handler */}

@@ -1,4 +1,10 @@
-import { CheckCircle2, AlertCircle } from "lucide-react";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React from "react";
+import { CheckCircle2, AlertCircle, ShieldAlert } from "lucide-react";
 import { vendorService } from "../../services/vendorService";
 
 interface SubmitCardProps {
@@ -11,7 +17,6 @@ export default function SubmitCard({
   const handleSubmit = async () => {
     try {
       const response = await vendorService.submitVerification();
-
       alert(response.message);
     } catch (error: any) {
       alert(error?.response?.data?.message ?? "Failed to submit verification.");
@@ -19,71 +24,54 @@ export default function SubmitCard({
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="rounded-3xl border border-slate-100 bg-white p-6 md:p-8 shadow-sm text-slate-800">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-600">
+        <div className="space-y-2 max-w-xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#2E5B9A] font-mono">
             Review & Submit
           </p>
 
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Ready for Verification?
           </h2>
 
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500">
-            Once all required information has been completed, submit your
-            organization for verification. The GMAA team will review your
-            application and notify you once the verification process has been
-            completed.
+          <p className="text-xs leading-relaxed text-slate-400 font-sans font-light">
+            Once all required credentials has been completed, submit your organization for verification. The GMAA compliance desk will verify your application and notify you.
           </p>
         </div>
 
-        <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-slate-50 p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-
-                <span className="text-sm font-medium text-slate-700">
-                  Organization Profile
-                </span>
+        {/* Process status diagnostics pill box */}
+        <div className="w-full max-w-sm rounded-2xl border border-slate-100 bg-slate-50/50 p-6 shrink-0">
+          <div className="space-y-4 text-xs font-sans">
+            
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span className="text-slate-500">Organization Profile</span>
               </div>
+              <span className="text-[10px] font-bold text-[#D91B24] bg-[#D91B24]/10 border border-[#D91B24]/20 px-2 py-0.5 rounded-md font-mono uppercase">Incomplete</span>
+            </div>
 
-              <span className="text-sm font-semibold text-red-500">
-                Incomplete
-              </span>
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span className="text-slate-500">Verification Documents</span>
+              </div>
+              <span className="text-[10px] font-bold text-[#D91B24] bg-[#D91B24]/10 border border-[#D91B24]/20 px-2 py-0.5 rounded-md font-mono">0 / 5</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-
-                <span className="text-sm font-medium text-slate-700">
-                  Verification Documents
-                </span>
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-amber-500" />
+                <span className="text-slate-500">Verification Status</span>
               </div>
-
-              <span className="text-sm font-semibold text-red-500">0 / 5</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-500" />
-
-                <span className="text-sm font-medium text-slate-700">
-                  Verification Status
-                </span>
-              </div>
-
-              <span className="text-sm font-semibold text-amber-600">
-                Documents Pending
-              </span>
+              <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md font-mono uppercase">Pending</span>
             </div>
           </div>
 
           <button
             onClick={handleSubmit}
-            className="mt-8 w-full rounded-2xl bg-cyan-600 py-4 font-bold text-white hover:bg-cyan-700 transition"
+            className="mt-6 w-full rounded-xl bg-[#2E5B9A] hover:bg-[#3b6eae] py-3.5 text-xs font-bold text-white transition active:scale-95 shadow-md shadow-blue-500/10"
           >
             Submit for Verification
           </button>

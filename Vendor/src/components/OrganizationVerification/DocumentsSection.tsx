@@ -1,7 +1,12 @@
-import { useState, useEffect } from "react";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect } from "react";
 import DocumentCard from "./DocumentCard";
 import { vendorService } from "../../services/vendorService";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ShieldCheck } from "lucide-react";
 
 interface DocumentsSectionProps {
   verificationStatus?: string;
@@ -21,11 +26,11 @@ export default function DocumentsSection({
   };
 
   const [files, setFiles] = useState<Record<string, UploadedFile | null>>({});
+
   useEffect(() => {
     const loadDocuments = async () => {
       try {
         const documents = await vendorService.getVendorDocuments();
-
         const mapped: Record<string, any> = {};
 
         documents.forEach((doc: any) => {
@@ -52,76 +57,63 @@ export default function DocumentsSection({
   const isLocked =
     verificationStatus === "PENDING_REVIEW" ||
     verificationStatus === "APPROVED";
+
   const documents = [
     {
       id: "COMPANY_REGISTRATION",
       title: "Company Registration / Business License",
-      description:
-        "Upload your organization's official registration or business license.",
+      description: "Upload your organization's official registration or business license.",
     },
     {
       id: "TAX_REGISTRATION",
       title: "Tax Registration",
-      description:
-        "Upload your GST, VAT or applicable tax registration certificate.",
+      description: "Upload your GST, VAT or applicable tax registration certificate.",
     },
     {
       id: "SIGNATORY_ID",
       title: "Authorized Signatory ID",
-      description:
-        "Upload the government-issued ID of the authorized representative.",
+      description: "Upload the government-issued ID of the authorized representative.",
     },
     {
       id: "ADDRESS_PROOF",
       title: "Business Address Proof",
-      description:
-        "Upload a utility bill, lease agreement or any valid address proof.",
+      description: "Upload a utility bill, lease agreement or any valid address proof.",
     },
     {
       id: "BANK_VERIFICATION",
       title: "Bank Account Verification",
-      description:
-        "Upload a cancelled cheque, bank certificate or account verification document.",
+      description: "Upload a cancelled cheque, bank certificate or account verification document.",
     },
   ];
 
   return (
-    <div>
+    <div className="space-y-6">
       {isLocked && (
-        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 p-5 animate-fade-in font-sans">
           <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600" />
-
+            <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600 shrink-0" />
             <div>
-              <p className="font-semibold text-amber-900">
-                Organization Verification Under Review
+              <p className="font-bold text-amber-900 text-xs">
+                Organization Verification Under Active Review
               </p>
-
-              <p className="mt-1 text-sm text-amber-700">
-                Your organization verification has been submitted to GMAA for
-                review. Your verification documents are currently locked to
-                preserve the review process. If any corrections are required,
-                GMAA will request a re-upload and unlock the necessary
-                documents.
+              <p className="mt-1 text-2xs text-amber-700 leading-relaxed font-light">
+                Your verification documents are currently locked to preserve the review process. If any corrections are required, GMAA coordinators will message you and temporarily unlock specific files.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-3xl border border-slate-100 bg-white p-6 md:p-8 shadow-sm">
         <div className="mb-8">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-600">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#2E5B9A] font-mono">
             Verification Documents
           </p>
-
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
+          <h2 className="mt-1 text-2xl font-bold text-slate-900 tracking-tight">
             Required Documents
           </h2>
-
-          <p className="mt-3 text-sm text-slate-500">
-            Upload all mandatory documents to submit your organization for
-            verification.
+          <p className="mt-2 text-xs text-slate-400 font-sans font-light">
+            Upload all mandatory credentials to submit your clinical network node for verification.
           </p>
         </div>
 
@@ -167,7 +159,6 @@ export default function DocumentsSection({
               onDelete={async () => {
                 try {
                   const uploaded = files[document.id];
-
                   if (uploaded?.id) {
                     await vendorService.deleteVendorDocument(uploaded.id);
                   }
@@ -183,7 +174,6 @@ export default function DocumentsSection({
               }}
               onPreview={() => {
                 const previewUrl = files[document.id]?.previewUrl;
-
                 if (previewUrl) {
                   window.open(previewUrl, "_blank");
                 }

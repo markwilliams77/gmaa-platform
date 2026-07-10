@@ -1,22 +1,18 @@
-import React from "react";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useEffect, useState } from "react";
 import Hero from "./Hero";
 import StatusCards from "./StatusCards";
 import OrganizationForm from "./OrganizationForm";
 import DocumentsSection from "./DocumentsSection";
 import SubmitCard from "./SubmitCard";
 import LogoUploadCard from "./LogoUploadCard";
-import { useEffect, useState } from "react";
 import { vendorService } from "../../services/vendorService";
 
 export default function OrganizationProfileView() {
-  const docs = [
-    "Company Registration / Business License",
-    "Tax Registration (GST / VAT / Tax ID)",
-    "Authorized Signatory ID",
-    "Business Address Proof",
-    "Bank Account Verification",
-  ];
-
   const [vendor, setVendor] = useState<any>(null);
 
   useEffect(() => {
@@ -33,17 +29,24 @@ export default function OrganizationProfileView() {
   }, []);
 
   return (
-    <>
+    <div className="space-y-8">
+      {/* 1. Header Banner */}
       <Hero />
 
+      {/* 2. Bento Quick Counters */}
       <StatusCards />
 
+      {/* 3. Logo Branding Module */}
       <LogoUploadCard />
 
+      {/* 4. Complete Company Profile Form */}
       <OrganizationForm />
 
+      {/* 5. Verification Document Grid Uploads */}
       <DocumentsSection verificationStatus={vendor?.verificationStatus} />
+      
+      {/* 6. Review Action Card */}
       <SubmitCard verificationStatus={vendor?.verificationStatus} />
-    </>
+    </div>
   );
 }

@@ -18,15 +18,14 @@ import {
   CreditCard,
   FolderClosed,
   Activity,
-  ChevronRight,
-  Menu,
   X,
   LockKeyhole 
 } from "lucide-react";
 import { ActiveTab } from "../types";
 
 interface SidebarProps {
-  isApprovedVendor: boolean; showToast: ( message: string, type?: "success" | "info" | "warning" ) => void;
+  isApprovedVendor: boolean; 
+  showToast: ( message: string, type?: "success" | "info" | "warning" ) => void;
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   vendorName: string;
@@ -49,61 +48,61 @@ export default function Sidebar({
 }: SidebarProps) {
 
   const mainNavItems = [
-  {
-    tab: ActiveTab.Dashboard,
-    label: "Dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    tab: ActiveTab.Marketplace,
-    label: "Marketplace",
-    icon: FileSpreadsheet,
-    badge: "13",
-    requiresApproval: true,
-  },
-  {
-    tab: ActiveTab.MyTenders,
-    label: "My Tenders",
-    icon: FileSpreadsheet,
-    badge: "8",
-    requiresApproval: true,
-  },
-  {
-    tab: ActiveTab.Consultations,
-    label: "Consultations",
-    icon: Users,
-    badge: "12",
-    requiresApproval: true,
-  },
-  {
-    tab: ActiveTab.Messages,
-    label: "Messages",
-    icon: MessageSquare,
-  },
-  {
-    tab: ActiveTab.Awards,
-    label: "Awards",
-    icon: Award,
-    badge: "2",
-    requiresApproval: true,
-  },
-  {
-    tab: ActiveTab.Analytics,
-    label: "Analytics",
-    icon: BarChart3,
-    requiresApproval: true,
-  },
-  {
-    tab: ActiveTab.ProfileManagement,
-    label: "Profile Management",
-    icon: Landmark,
-  },
-  {
-    tab: ActiveTab.Settings,
-    label: "Settings",
-    icon: Settings,
-  },
-];
+    {
+      tab: ActiveTab.Dashboard,
+      label: "Dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      tab: ActiveTab.Marketplace,
+      label: "Marketplace",
+      icon: FileSpreadsheet,
+      badge: "13",
+      requiresApproval: true,
+    },
+    {
+      tab: ActiveTab.MyTenders,
+      label: "My Tenders",
+      icon: FileSpreadsheet,
+      badge: "8",
+      requiresApproval: true,
+    },
+    {
+      tab: ActiveTab.Consultations,
+      label: "Consultations",
+      icon: Users,
+      badge: "12",
+      requiresApproval: true,
+    },
+    {
+      tab: ActiveTab.Messages,
+      label: "Messages",
+      icon: MessageSquare,
+    },
+    {
+      tab: ActiveTab.Awards,
+      label: "Awards",
+      icon: Award,
+      badge: "2",
+      requiresApproval: true,
+    },
+    {
+      tab: ActiveTab.Analytics,
+      label: "Analytics",
+      icon: BarChart3,
+      requiresApproval: true,
+    },
+    {
+      tab: ActiveTab.ProfileManagement,
+      label: "Profile Management",
+      icon: Landmark,
+    },
+    {
+      tab: ActiveTab.Settings,
+      label: "Settings",
+      icon: Settings,
+    },
+  ];
 
   const placeholderNavItems = [
     { tab: ActiveTab.MarketingCenter, label: "Marketing Center", icon: Megaphone, premium: true },
@@ -122,29 +121,29 @@ export default function Sidebar({
       {isSidebarOpen && (
         <div 
           id="sidebar-overlay"
-          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-xs lg:hidden transition-opacity duration-300"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar container */}
+      {/* Sidebar container (Custom deep dark GMAA Blue) */}
       <aside
         id="sidebar-container"
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-[#0f172a] text-slate-300 transition-transform duration-300 ease-out border-r border-slate-800 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-[#080d1a] text-slate-350 transition-transform duration-300 ease-out border-r border-blue-950/50 lg:static lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Header brand logo */}
-        <div className="flex h-20 items-center justify-between px-6 border-b border-slate-800 bg-[#0f172a]">
+        <div className="flex h-20 items-center justify-between px-6 border-b border-blue-950/40 bg-[#080d1a]">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-              <Activity className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2E5B9A]/10 border border-[#2E5B9A]/20 text-blue-400">
+              <Activity className="h-5 w-5 animate-pulse" />
             </div>
             <div>
               <div className="font-display text-lg font-bold tracking-wider text-white flex items-center gap-1.5">
-                {logoText} <span className="text-xs bg-cyan-900/40 text-cyan-400 font-medium px-1.5 py-0.5 rounded uppercase tracking-normal">Vendor</span>
+                {logoText} <span className="text-[10px] bg-[#2E5B9A]/20 text-blue-300 font-bold px-2 py-0.5 rounded uppercase font-mono tracking-wider">Vendor</span>
               </div>
-              <p className="text-xs text-slate-400 font-sans tracking-tight">Global Medical Marketplace</p>
+              <p className="text-[10px] text-slate-500 font-sans tracking-tight">Global Medical Alliance</p>
             </div>
           </div>
           <button 
@@ -156,11 +155,11 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Navigation block */}
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-7 custom-scrollbar">
+        {/* Navigation blocks */}
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-7 custom-scrollbar select-none">
           {/* Main Workspace sections */}
           <div>
-            <div className="px-3 mb-2.5 text-xs font-semibold text-slate-400 uppercase tracking-wider font-display">
+            <div className="px-3 mb-2.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono">
               Workspace CORE
             </div>
             <nav className="space-y-1">
@@ -170,53 +169,58 @@ export default function Sidebar({
                 const isLocked = item.requiresApproval && !isApprovedVendor;
                 return (
                   <button
-                  key={item.tab}
-                  id={`nav-item-${item.tab.toLowerCase().replace(/\s+/g, "-")}`}
-                  onClick={() => {
-                    if (item.requiresApproval && !isApprovedVendor) {
-                      showToast( "This feature will unlock after your organization has been approved.", "info"
-                      );
-                      return;
-                    }
-                    handleNavClick(item.tab);
-                  }}
-                  className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all group duration-200 ${
-                    isActive ? "bg-slate-800 text-cyan-400" : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                    key={item.tab}
+                    id={`nav-item-${item.tab.toLowerCase().replace(/\s+/g, "-")}`}
+                    onClick={() => {
+                      if (item.requiresApproval && !isApprovedVendor) {
+                        showToast(
+                          "This feature will unlock after your organization has been approved.", 
+                          "info"
+                        );
+                        return;
+                      }
+                      handleNavClick(item.tab);
+                    }}
+                    className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all group duration-200 ${
+                      isActive 
+                        ? "bg-[#2E5B9A]/15 text-blue-300 border-l-2 border-[#2E5B9A] pl-3" 
+                        : "text-slate-400 hover:text-white hover:bg-slate-900/40"
                     }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
                         className={`h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-105 ${
-                          isActive ? "text-cyan-400" : "text-slate-400 group-hover:text-white"
+                          isActive ? "text-blue-300" : "text-slate-500 group-hover:text-white"
                         }`}
-                        />
-                        <span className="font-sans font-normal">
-                          {item.label}
-                          </span>
-                          {isLocked && (
-                            <LockKeyhole className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                            )}
-                            </div>
-                            {!isLocked && item.badge && (
-                              <span
-                              className={`rounded-full px-2 py-0.5 text-2xs font-medium font-sans ${
-                                isActive ? "bg-cyan-400/20 text-cyan-300" : "bg-slate-800 text-slate-400"
-                              }`}
-                            >
-                            {item.badge}
-                          </span>
-                        )}
-                      </button>
-                     );
-                  })}
-              </nav>
+                      />
+                      <span className="font-sans">
+                        {item.label}
+                      </span>
+                      {isLocked && (
+                        <LockKeyhole className="h-3.5 w-3.5 text-[#D91B24] shrink-0 animate-pulse" />
+                      )}
+                    </div>
+                    
+                    {!isLocked && item.badge && (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[9px] font-bold font-mono ${
+                          isActive ? "bg-[#2E5B9A]/20 text-blue-300" : "bg-slate-900 text-slate-500"
+                        }`}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Placeholders marked for growth */}
+          {/* Future Growth Sections */}
           <div>
-            <div className="px-3 mb-2.5 text-xs font-semibold text-slate-400 uppercase tracking-wider font-display flex items-center justify-between">
+            <div className="px-3 mb-2.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono flex items-center justify-between">
               <span>Future Modules</span>
-              <span className="text-3xs text-yellow-500 border border-yellow-500/30 px-1 rounded bg-yellow-900/10 font-sans tracking-normal uppercase">Coming Soon</span>
+              <span className="text-[8px] text-[#2E5B9A] border border-blue-500/20 px-1.5 py-0.2 rounded bg-[#2E5B9A]/10 font-sans tracking-normal uppercase">Coming Soon</span>
             </div>
             <nav className="space-y-1">
               {placeholderNavItems.map((item) => {
@@ -227,19 +231,19 @@ export default function Sidebar({
                     key={item.tab}
                     id={`nav-item-future-${item.tab.toLowerCase().replace(/\s+/g, '-')}`}
                     onClick={() => handleNavClick(item.tab)}
-                    className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all group duration-200 opacity-60 hover:opacity-95 ${
+                    className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all group duration-200 opacity-55 hover:opacity-95 ${
                       isActive
-                        ? "bg-yellow-500/10 text-yellow-400 border-l-2 border-yellow-400 pl-3"
-                        : "text-slate-300 hover:text-white rounded-xl hover:bg-slate-800/50 transition-all"
+                        ? "bg-[#2E5B9A]/10 text-blue-300 border-l-2 border-[#2E5B9A] pl-3"
+                        : "text-slate-400 hover:text-white hover:bg-slate-900/40"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="h-4.5 w-4.5 text-slate-400 group-hover:text-amber-400" />
-                      <span className="font-sans font-light text-slate-300 group-hover:text-white">{item.label}</span>
+                      <Icon className="h-4.5 w-4.5 text-slate-500 group-hover:text-blue-400" />
+                      <span className="font-sans text-slate-400 group-hover:text-white font-medium">{item.label}</span>
                     </div>
                     {item.premium && (
-                      <span className="text-3xs font-semibold font-sans bg-amber-900/40 text-amber-300 border border-amber-500/20 rounded px-1.5 py-0.2">
-                        Premium
+                      <span className="text-[8px] font-bold font-sans bg-[#2E5B9A]/10 text-blue-300 border border-blue-500/10 rounded px-1.5 py-0.2">
+                        PREMIUM
                       </span>
                     )}
                   </button>
@@ -250,20 +254,20 @@ export default function Sidebar({
         </div>
 
         {/* Footer info & Logout */}
-        <div className="mt-auto p-4 border-t border-slate-800 bg-[#0f172a]">
-          <div className="mb-4 rounded-xl bg-slate-800/40 p-3 border border-slate-800">
-            <div className="flex items-center gap-2.5">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <p className="text-xs font-semibold text-slate-200 truncate">{vendorName}</p>
+        <div className="mt-auto p-4 border-t border-blue-950/40 bg-[#080d1a]">
+          <div className="mb-4 rounded-xl bg-slate-900/30 p-3 border border-blue-950/30">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-xs font-bold text-slate-200 truncate">{vendorName}</p>
             </div>
-            <p className="mt-1 text-3xs text-slate-400 font-sans font-normal truncate">Tier-1 Medical Partner</p>
+            <p className="mt-1 text-[9px] text-slate-500 font-sans font-semibold tracking-wider uppercase">Tier-1 Medical Partner</p>
           </div>
           <button
             id="sidebar-logout-btn"
             onClick={onLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800/60 hover:text-white transition-all group"
+            className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all group"
           >
-            <LogOut className="h-4.5 w-4.5 text-slate-300 transition-transform group-hover:-translate-x-0.5 group-hover:text-white" />
+            <LogOut className="h-4.5 w-4.5 text-slate-500 transition-transform group-hover:-translate-x-0.5 group-hover:text-red-400" />
             <span className="font-sans">Disconnect Portal</span>
           </button>
         </div>
