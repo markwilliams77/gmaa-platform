@@ -45,6 +45,7 @@ const allowedOrigins = [
   "https://medalliance-frontend.vercel.app",
   "https://global-maa-backend-app-vwh5.vercel.app",
   "https://gmaa-platform-ews5.vercel.app",
+  "https://gmaa-platform-12sm-git-develop-global-maa.vercel.app",
   "https://gmaa-platform-12sm.vercel.app",
   "https://globalmaa.com",
   "https://www.globalmaa.com",
