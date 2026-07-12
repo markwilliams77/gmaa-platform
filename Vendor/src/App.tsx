@@ -199,7 +199,16 @@ export default function App() {
   };
 
   // Current system UTC display
-  const currentDateTimeStr = "June 15, 2026 - 12:00 AM UTC";
+  const currentDateTimeStr = "" + new Date().toLocaleString("en-US", {
+    timeZone: "IST",
+    hour12: true,
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-cyan-500/20 selection:text-cyan-900 leading-normal">
