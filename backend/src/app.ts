@@ -53,8 +53,8 @@ const allowedOrigins = [
   "http://localhost:3002",
   "http://localhost:3001",
   "http://localhost:5173",
-  "http://vendor.globalmaa.com",
-  "http://admin.globalmaa.com",
+  "https://vendor.globalmaa.com",
+  "https://admin.globalmaa.com",
 ];
 
 app.use(
