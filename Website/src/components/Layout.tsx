@@ -130,8 +130,7 @@ export default function Layout() {
         onLogout={handleLogout}
         onLogin={() => setIsLoggingIn(true)}
         onClientAccess={() => {
-          setPendingDirectoryUrl("/vendors");
-          setIsOtpOpen(true);
+          navigate("/vendors");
         }}
         isAdminView={false}
       />
@@ -179,6 +178,7 @@ export default function Layout() {
         initialVendorName={consultationContext.vendorName}
       />
 
+      {/*
       <ClientOtpModal
         isOpen={isOtpOpen}
         onClose={() => setIsOtpOpen(false)}
@@ -189,6 +189,7 @@ export default function Layout() {
           }
         }}
       />
+      */}
 
       {/* Footer */}
       <footer className="bg-slate-bg py-20 md:py-32 border-t border-navy/5">
