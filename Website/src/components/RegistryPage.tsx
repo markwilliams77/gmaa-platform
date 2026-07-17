@@ -3,10 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Search,
-  Filter,
-  MapPin,
   Activity,
-  ChevronRight,
   SlidersHorizontal,
   X,
 } from "lucide-react";
@@ -112,23 +109,23 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
   };
 
   return (
-    <div className="min-h-screen pt-24 md:pt-32 pb-24 bg-white relative">
+    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 pb-16 sm:pb-24 bg-white relative overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
         {/* Header Section */}
-        <div className="mb-12 md:mb-16">
+        <div className="mb-8 sm:mb-12 md:mb-16">
           <div className="flex items-center gap-3 mb-4 md:mb-6">
             <div className="w-8 h-1 bg-brand-red rounded-full" />
-            <span className="text-navy font-bold uppercase tracking-[0.4em] text-[8px] md:text-[10px]">
+            <span className="text-navy font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[8px] md:text-[10px]">
               VERIFIED GLOBAL DIRECTORY
             </span>
           </div>
-          <h1 className="text-[clamp(2rem,4vw,4rem)] md:text-8xl font-light tracking-tighter leading-[1.1] md:leading-[0.9] text-navy mb-6 md:mb-8">
+          <h1 className="text-[clamp(1.85rem,5.5vw,4.5rem)] md:text-7xl lg:text-8xl font-light tracking-tighter leading-[1.1] md:leading-[0.9] text-navy mb-4 sm:mb-6">
             Global Healthcare{" "}
-            <span className="font-serif italic text-gradient font-medium pr-2">
+            <span className="font-serif italic text-gradient font-medium pr-2 block sm:inline">
               Directory.
             </span>
           </h1>
-          <p className="text-navy/40 max-w-xl text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] font-medium leading-relaxed">
+          <p className="text-navy/40 max-w-xl text-base sm:text-lg leading-relaxed">
             Browse GMAA verified healthcare providers across hospitals,
             laboratories, pharmacies, medical equipment suppliers, home
             healthcare, rehabilitation, medical tourism facilitators and other
@@ -137,16 +134,16 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
         </div>
 
         {/* Filter/Search Bar */}
-        <div className="sticky top-24 z-30 mb-12">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="sticky top-20 sm:top-24 z-30 mb-8 sm:mb-12">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
             <div className="relative flex-grow group">
               <Search
-                className="absolute left-6 top-1/2 -translate-y-1/2 text-navy/25 transition-colors"
+                className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-navy/25 transition-colors"
                 size={20}
               />
               <input
                 type="text"
-                placeholder="Search by organization, service, specialty or country..."
+                placeholder="Search by organization, specialty..."
                 value={searchQuery}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -164,21 +161,21 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
 
                   setSearchParams(nextParams);
                 }}
-                className="w-full pl-16 pr-8 py-6 bg-white border border-navy/10 rounded-3xl outline-none text-navy font-medium shadow-lg shadow-slate-200/40 transition-all focus:border-brand-red focus:ring-4 focus:ring-brand-red/10"
+                className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-4 sm:py-5 md:py-6 bg-white border border-navy/10 rounded-2xl md:rounded-3xl outline-none text-navy font-medium shadow-lg shadow-slate-200/40 transition-all focus:border-brand-red focus:ring-4 focus:ring-brand-red/10 text-sm sm:text-base"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-8 py-6 rounded-3xl border flex items-center gap-3 font-bold text-[10px] uppercase tracking-[0.2em] shadow-lg transition-all active:scale-95 ${
+              className={`px-6 sm:px-8 py-4 sm:py-5 md:py-6 rounded-2xl md:rounded-3xl border flex items-center justify-center gap-3 font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.2em] shadow-lg transition-all active:scale-95 shrink-0 ${
                 showFilters
                   ? "bg-brand-red text-white border-brand-red shadow-brand-red/20"
                   : "bg-white text-navy border-navy/10 hover:border-brand-red hover:text-brand-red"
               }`}
             >
-              <SlidersHorizontal size={16} />
+              <SlidersHorizontal size={15} />
               Filters
               {(selectedCategory || selectedCountry) && (
-                <span className="w-4 h-4 rounded-full bg-brand-red text-white flex items-center justify-center text-[8px]">
+                <span className="w-4 h-4 rounded-full bg-brand-red text-white flex items-center justify-center text-[8px] font-bold">
                   {(selectedCategory ? 1 : 0) + (selectedCountry ? 1 : 0)}
                 </span>
               )}
@@ -192,19 +189,18 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="absolute top-full left-0 right-0 mt-4 p-8 bg-white border border-navy/5 rounded-[40px] shadow-2xl shadow-navy/10 z-50 overflow-hidden"
+                className="absolute top-full left-0 right-0 mt-4 p-5 sm:p-8 bg-white border border-navy/5 rounded-[24px] sm:rounded-[40px] shadow-2xl shadow-navy/10 z-50 overflow-y-auto max-h-[60vh] lg:max-h-none"
               >
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                   {/* ========================= MAIN CATEGORY ========================= */}
-
                   <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-navy/30 mb-6">
+                    <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-navy/30 mb-4 sm:mb-6">
                       Main Category
                     </h4>
 
                     <div className="relative">
                       <Search
-                        size={16}
+                        size={15}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-navy/30"
                       />
 
@@ -215,14 +211,14 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                         onChange={(e) =>
                           setCategoryFilterSearch(e.target.value)
                         }
-                        className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm outline-none focus:border-cyan"
+                        className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 bg-white text-xs sm:text-sm outline-none focus:border-cyan text-navy"
                       />
                     </div>
 
-                    <div className="mt-4 max-h-64 overflow-y-auto rounded-2xl border border-slate-200 bg-white">
+                    <div className="mt-4 max-h-52 sm:max-h-64 overflow-y-auto rounded-xl sm:rounded-2xl border border-slate-200 bg-white">
                       <div className="divide-y divide-slate-100">
                         <label
-                          className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                          className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                             !selectedCategory
                               ? "bg-cyan/10"
                               : "hover:bg-slate-50"
@@ -235,7 +231,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                             className="accent-cyan"
                           />
 
-                          <span className="text-sm text-navy">
+                          <span className="text-xs sm:text-sm text-navy">
                             All Categories
                           </span>
                         </label>
@@ -249,7 +245,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                           .map((c) => (
                             <label
                               key={c}
-                              className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                              className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                                 selectedCategory === c
                                   ? "bg-cyan/10"
                                   : "hover:bg-slate-50"
@@ -262,7 +258,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                                 className="accent-cyan"
                               />
 
-                              <span className="text-sm text-navy">{c}</span>
+                              <span className="text-xs sm:text-sm text-navy">{c}</span>
                             </label>
                           ))}
                       </div>
@@ -270,15 +266,14 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                   </div>
 
                   {/* ========================= SUB CATEGORY ========================= */}
-
                   <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-navy/30 mb-6">
+                    <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-navy/30 mb-4 sm:mb-6">
                       Sub Category
                     </h4>
 
                     <div className="relative">
                       <Search
-                        size={16}
+                        size={15}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-navy/30"
                       />
 
@@ -289,20 +284,20 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                         onChange={(e) =>
                           setSubCategoryFilterSearch(e.target.value)
                         }
-                        className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm outline-none focus:border-cyan"
+                        className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 bg-white text-xs sm:text-sm outline-none focus:border-cyan text-navy"
                         disabled={!selectedCategory}
                       />
                     </div>
 
-                    <div className="mt-4 max-h-64 overflow-y-auto rounded-2xl border border-slate-200 bg-white">
+                    <div className="mt-4 max-h-52 sm:max-h-64 overflow-y-auto rounded-xl sm:rounded-2xl border border-slate-200 bg-white">
                       {!selectedCategory ? (
-                        <div className="h-64 flex items-center justify-center px-6 text-center text-sm text-navy/40">
+                        <div className="h-44 sm:h-64 flex items-center justify-center px-4 sm:px-6 text-center text-xs sm:text-sm text-navy/40">
                           Select a Main Category to view its Sub Categories.
                         </div>
                       ) : (
                         <div className="divide-y divide-slate-100">
                           <label
-                            className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                            className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                               !selectedSubCategory
                                 ? "bg-cyan/10"
                                 : "hover:bg-slate-50"
@@ -316,7 +311,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                               className="accent-cyan"
                             />
 
-                            <span className="text-sm text-navy">
+                            <span className="text-xs sm:text-sm text-navy">
                               All Sub Categories
                             </span>
                           </label>
@@ -332,7 +327,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                             .map((sub) => (
                               <label
                                 key={sub}
-                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                                className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                                   selectedSubCategory === sub
                                     ? "bg-cyan/10"
                                     : "hover:bg-slate-50"
@@ -346,7 +341,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                                   className="accent-cyan"
                                 />
 
-                                <span className="text-sm text-navy">{sub}</span>
+                                <span className="text-xs sm:text-sm text-navy">{sub}</span>
                               </label>
                             ))}
                         </div>
@@ -355,15 +350,14 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                   </div>
 
                   {/* ========================= COUNTRY ========================= */}
-
                   <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-navy/30 mb-6">
+                    <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-navy/30 mb-4 sm:mb-6">
                       Country
                     </h4>
 
                     <div className="relative">
                       <Search
-                        size={16}
+                        size={15}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-navy/30"
                       />
 
@@ -372,14 +366,14 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                         placeholder="Search countries..."
                         value={countrySearch}
                         onChange={(e) => setCountrySearch(e.target.value)}
-                        className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm outline-none focus:border-cyan"
+                        className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 bg-white text-xs sm:text-sm outline-none focus:border-cyan text-navy"
                       />
                     </div>
 
-                    <div className="mt-4 max-h-64 overflow-y-auto rounded-2xl border border-slate-200 bg-white">
+                    <div className="mt-4 max-h-52 sm:max-h-64 overflow-y-auto rounded-xl sm:rounded-2xl border border-slate-200 bg-white">
                       <div className="divide-y divide-slate-100">
                         <label
-                          className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                          className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                             !selectedCountry
                               ? "bg-cyan/10"
                               : "hover:bg-slate-50"
@@ -392,7 +386,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                             className="accent-cyan"
                           />
 
-                          <span className="text-sm text-navy">
+                          <span className="text-xs sm:text-sm text-navy">
                             All Countries
                           </span>
                         </label>
@@ -406,7 +400,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                           .map((country) => (
                             <label
                               key={country}
-                              className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
+                              className={`flex items-center gap-3 px-4 py-2.5 sm:py-3 cursor-pointer transition ${
                                 selectedCountry === country
                                   ? "bg-cyan/10"
                                   : "hover:bg-slate-50"
@@ -419,7 +413,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                                 className="accent-cyan"
                               />
 
-                              <span className="text-sm text-navy">
+                              <span className="text-xs sm:text-sm text-navy">
                                 {country}
                               </span>
                             </label>
@@ -429,7 +423,7 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                   </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-navy/5 flex justify-between items-center">
+                <div className="mt-8 sm:mt-12 pt-4 sm:pt-8 border-t border-navy/5 flex justify-between items-center">
                   <button
                     onClick={() => {
                       setSelectedCategory(null);
@@ -445,13 +439,13 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                       setSearchParams(new URLSearchParams());
                       setPage(1);
                     }}
-                    className="text-brand-red text-[10px] font-bold uppercase tracking-widest hover:underline"
+                    className="text-brand-red text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:underline"
                   >
                     Reset All
                   </button>
                   <button
                     onClick={() => setShowFilters(false)}
-                    className="bg-navy text-white px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                    className="bg-navy text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest active:scale-95 transition-all"
                   >
                     Apply Selection
                   </button>
@@ -462,58 +456,56 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
         </div>
 
         {/* Results Info */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-10 pb-6 border-b border-navy/10">
-          {(selectedCategory || selectedCountry || searchQuery) && (
-            <div className="flex gap-2">
-              {selectedCategory && (
-                <span className="flex items-center gap-2 bg-cyan/10 text-cyan px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
-                  {selectedCategory}
-                  <X
-                    size={10}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setSelectedSubCategory(null);
-                      setSelectedCountry(null);
+        {(selectedCategory || selectedCountry || searchQuery) && (
+          <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 pb-4 border-b border-navy/10">
+            {selectedCategory && (
+              <span className="flex items-center gap-2 bg-cyan/10 text-cyan px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                {selectedCategory}
+                <X
+                  size={10}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSelectedSubCategory(null);
+                    setSelectedCountry(null);
 
-                      setCategoryFilterSearch("");
-                      setSubCategoryFilterSearch("");
-                      setCountrySearch("");
+                    setCategoryFilterSearch("");
+                    setSubCategoryFilterSearch("");
+                    setCountrySearch("");
 
-                      setSearchQuery("");
+                    setSearchQuery("");
 
-                      setSearchParams(new URLSearchParams());
-                      setPage(1);
-                    }}
-                  />
-                </span>
-              )}
-              {selectedCountry && selectedCountry !== "Global" && (
-                <span className="flex items-center gap-2 bg-navy/10 text-navy px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
-                  {selectedCountry}
-                  <X
-                    size={10}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setSelectedSubCategory(null);
-                      setSelectedCountry(null);
+                    setSearchParams(new URLSearchParams());
+                    setPage(1);
+                  }}
+                />
+              </span>
+            )}
+            {selectedCountry && selectedCountry !== "Global" && (
+              <span className="flex items-center gap-2 bg-navy/10 text-navy px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                {selectedCountry}
+                <X
+                  size={10}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSelectedSubCategory(null);
+                    setSelectedCountry(null);
 
-                      setCategoryFilterSearch("");
-                      setSubCategoryFilterSearch("");
-                      setCountrySearch("");
+                    setCategoryFilterSearch("");
+                    setSubCategoryFilterSearch("");
+                    setCountrySearch("");
 
-                      setSearchQuery("");
+                    setSearchQuery("");
 
-                      setSearchParams(new URLSearchParams());
-                      setPage(1);
-                    }}
-                  />
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+                    setSearchParams(new URLSearchParams());
+                    setPage(1);
+                  }}
+                />
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Grid Layout */}
         {vendors.length > 0 ? (
@@ -539,13 +531,13 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
             ))}
           </div>
         ) : (
-          <div className="py-40 text-center">
-            <Activity className="mx-auto text-brand-red/20 mb-8" size={72} />
-            <h3 className="text-4xl font-light text-navy tracking-tight">
+          <div className="py-24 sm:py-40 text-center">
+            <Activity className="mx-auto text-brand-red/20 mb-6 sm:mb-8 shrink-0" size={56} />
+            <h3 className="text-2xl sm:text-4xl font-light text-navy tracking-tight px-4">
               No healthcare partners found.
             </h3>
 
-            <p className="mt-4 text-navy/50 max-w-lg mx-auto">
+            <p className="mt-4 text-xs sm:text-sm md:text-base text-navy/50 max-w-lg mx-auto px-4 leading-relaxed">
               Try adjusting your search terms or removing one or more filters to
               explore additional verified healthcare organizations.
             </p>
@@ -564,47 +556,57 @@ export default function RegistryPage({ onSelectVendor }: RegistryPageProps) {
                 setSearchParams(new URLSearchParams());
                 setPage(1);
               }}
-              className="mt-10 inline-flex rounded-full bg-brand-red px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:bg-navy"
+              className="mt-8 sm:mt-10 inline-flex rounded-full bg-brand-red px-6 sm:px-8 py-3.5 sm:py-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-white transition hover:bg-navy shadow-lg active:scale-95"
             >
               Clear filters & search
             </button>
           </div>
         )}
+
         {/* ========================= PAGINATION ========================= */}
-
         {totalPages > 1 && (
-          <div className="mt-12 flex items-center justify-center gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Previous
-            </button>
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="rounded-xl border border-slate-200 px-3.5 py-2 text-xs sm:text-sm font-semibold transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 text-navy"
+              >
+                Previous
+              </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => setPage(pageNumber)}
-                  className={`h-10 w-10 rounded-xl text-sm font-semibold transition ${
-                    page === pageNumber
-                      ? "bg-navy text-white"
-                      : "border border-slate-200 hover:bg-slate-100"
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              ),
-            )}
+              {/* Desktop Page Numbers */}
+              <div className="hidden sm:flex items-center gap-1.5">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      onClick={() => setPage(pageNumber)}
+                      className={`h-10 w-10 rounded-xl text-sm font-semibold transition ${
+                        page === pageNumber
+                          ? "bg-navy text-white shadow-md shadow-navy/20"
+                          : "border border-slate-200 hover:bg-slate-100 text-navy"
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  ),
+                )}
+              </div>
 
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Next
-            </button>
+              {/* Mobile Page indicator */}
+              <span className="sm:hidden text-xs font-semibold uppercase tracking-widest text-navy/55 px-2">
+                Page {page} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="rounded-xl border border-slate-200 px-3.5 py-2 text-xs sm:text-sm font-semibold transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 text-navy"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

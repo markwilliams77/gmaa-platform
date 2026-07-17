@@ -3,17 +3,11 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Building2,
   Stethoscope,
-  FileCheck,
-  UserCircle2,
   ChevronRight,
   ChevronLeft,
   Check,
-  CloudUpload,
-  Globe,
-  MapPin,
   ShieldCheck,
   Zap,
-  Activity,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { backendApi } from "../services/backendApi";
@@ -23,6 +17,7 @@ import { Country, State, City } from "country-state-city";
 import ReactCountryFlag from "react-country-flag";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+
 declare global {
   interface Window {
     Razorpay: any;
@@ -396,7 +391,7 @@ export default function VendorOnboarding({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#F3F4F6] overflow-y-auto p-4 lg:p-8">
+    <div className="fixed inset-0 z-[100] bg-[#F3F4F6] overflow-y-auto p-3 sm:p-4 lg:p-8">
       {/* Background Decor */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -406,31 +401,31 @@ export default function VendorOnboarding({
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="w-full max-w-5xl min-h-fit bg-white rounded-[40px] shadow-2xl border border-navy/5 relative overflow-hidden mx-auto my-6"
+        className="w-full max-w-5xl min-h-fit bg-white rounded-[24px] sm:rounded-[40px] shadow-2xl border border-navy/5 relative overflow-hidden mx-auto my-3 sm:my-6"
       >
-        <div className="grid lg:grid-cols-12 h-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 h-auto">
           {/* Left: Progress Sidebar */}
-          <div className="lg:col-span-4 bg-[#0A2647] p-12 text-white relative flex flex-col justify-between">
+          <div className="lg:col-span-4 bg-[#0A2647] p-6 sm:p-8 lg:p-12 text-white relative flex flex-col justify-between gap-8 lg:gap-0">
             <div>
-              <div className="flex items-center gap-4 mb-14">
-                <div className="w-10 h-10 bg-brand-red rounded-2xl flex items-center justify-center font-bold text-white shadow-lg shadow-brand-red/20 transition-transform hover:scale-110">
+              <div className="flex items-center gap-4 mb-6 sm:mb-10 lg:mb-14">
+                <div className="w-10 h-10 bg-brand-red rounded-2xl flex items-center justify-center font-bold text-white shadow-lg shadow-brand-red/20 transition-transform hover:scale-110 shrink-0">
                   M
                 </div>
                 <span className="text-white font-bold tracking-[0.3em] text-[10px] uppercase">
                   GLOBAL MAA
                 </span>
               </div>
-              <h2 className="text-[clamp(1.10rem,2vw,2rem)] font-light uppercase tracking-tight mb-6 leading-[0.9]">
+              <h2 className="text-[clamp(1.1rem,2vw,2rem)] font-light uppercase tracking-tight mb-6 leading-[1.05] sm:leading-[0.9]">
                 Institutional <br />
                 <span className="font-serif italic font-medium text-gradient pr-1">
                   Registration
                 </span>
               </h2>
 
-              <div className="space-y-10">
+              <div className="space-y-6 sm:space-y-8 lg:space-y-10">
                 {STEPS.map((step) => (
-                  <div key={step.id} className="flex gap-6 group">
-                    <div className="flex flex-col items-center">
+                  <div key={step.id} className="flex gap-4 sm:gap-6 group">
+                    <div className="flex flex-col items-center shrink-0">
                       <div
                         className={cn(
                           "w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-500",
@@ -478,10 +473,10 @@ export default function VendorOnboarding({
               </div>
             </div>
 
-            <div className="pt-12">
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/5">
-                <p className="text-[10px] font-black uppercase tracking-widest text-cyan mb-2 flex items-center gap-2">
-                  <ShieldCheck size={12} fill="currentColor" /> GMAA
+            <div className="pt-6 sm:pt-8 lg:pt-12">
+              <div className="bg-white/5 rounded-2xl p-5 sm:p-6 border border-white/5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan mb-2 flex items-center gap-2">
+                  <ShieldCheck size={12} fill="currentColor" className="shrink-0" /> GMAA
                   Verification
                 </p>
                 <p className="text-[10px] text-white/40 leading-relaxed uppercase font-bold">
@@ -493,10 +488,10 @@ export default function VendorOnboarding({
           </div>
 
           {/* Right: Form Content */}
-          <div className="lg:col-span-8 p-8 lg:p-12 relative flex flex-col">
+          <div className="lg:col-span-8 p-5 sm:p-8 lg:p-12 relative flex flex-col">
             <button
               onClick={onCancel}
-              className="absolute top-8 right-8 text-navy/20 hover:text-brand-red transition-colors uppercase text-[10px] font-black tracking-widest"
+              className="absolute top-6 right-6 sm:top-8 sm:right-8 text-navy/20 hover:text-brand-red transition-colors uppercase text-[10px] font-black tracking-widest z-10"
             >
               Exit
             </button>
@@ -508,32 +503,30 @@ export default function VendorOnboarding({
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="space-y-12"
+                  className="space-y-8 sm:space-y-12"
                 >
                   {/* Step Header */}
                   <div>
-                    <span className="text-cyan text-[10px] font-bold uppercase tracking-[0.4em]">
+                    <span className="text-cyan text-[10px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em]">
                       Step 0{currentStep} of 0{STEPS.length}
                     </span>
-                    <h3 className="text-5xl font-light text-navy uppercase tracking-tighter mt-4 leading-none">
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light text-navy uppercase tracking-tighter mt-3 sm:mt-4 leading-none">
                       {STEPS.find((s) => s.id === currentStep)?.title}
                     </h3>
                   </div>
 
                   {/* Step 1: Basic Details */}
                   {currentStep === 1 && (
-                    <div className="grid grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
                       {/* Organisation Name */}
-
-                      <div className="col-span-2 space-y-2">
+                      <div className="sm:col-span-2 space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Organisation Name
                         </label>
-
                         <input
                           type="text"
                           placeholder="Global Health General Hospital"
-                          className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                          className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           value={formData.orgName}
                           onChange={(e) =>
                             setFormData({
@@ -545,16 +538,14 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* Street Address */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Street Address
                         </label>
-
                         <input
                           type="text"
                           placeholder="123 Medic Street"
-                          className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                          className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           value={formData.address}
                           onChange={(e) =>
                             setFormData({
@@ -566,12 +557,10 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* Country */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Country
                         </label>
-
                         <Select
                           options={countryOptions}
                           placeholder="Select Country"
@@ -597,12 +586,10 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* State */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           State / Province
                         </label>
-
                         <Select
                           options={stateOptions}
                           placeholder="Select State / Province"
@@ -626,12 +613,10 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* City */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           City
                         </label>
-
                         <Select
                           options={cityOptions}
                           placeholder="Select City"
@@ -654,16 +639,14 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* Email */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Organisation Email
                         </label>
-
                         <input
                           type="email"
                           placeholder="e.g. contact@organisation.com"
-                          className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                          className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           value={formData.email}
                           onChange={(e) =>
                             setFormData({
@@ -675,12 +658,10 @@ export default function VendorOnboarding({
                       </div>
 
                       {/* Phone */}
-
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Contact Number
                         </label>
-
                         <PhoneInput
                           international
                           defaultCountry={selectedCountry?.isoCode as any}
@@ -692,21 +673,19 @@ export default function VendorOnboarding({
                               contactNumber: value || "",
                             })
                           }
-                          className="w-full bg-slate-100 rounded-2xl px-5 py-4 text-sm font-bold"
+                          className="w-full bg-slate-100 rounded-2xl px-4 sm:px-5 py-3.5 sm:py-4 text-sm font-bold text-navy"
                         />
                       </div>
 
                       {/* Contact Person */}
-
-                      <div className="col-span-2 space-y-2">
+                      <div className="sm:col-span-2 space-y-2">
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Contact Person
                         </label>
-
                         <input
                           type="text"
-                          placeholder=" "
-                          className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                          placeholder="FullName"
+                          className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           value={formData.contactPerson}
                           onChange={(e) =>
                             setFormData({
@@ -718,10 +697,11 @@ export default function VendorOnboarding({
                       </div>
                     </div>
                   )}
+
                   {/* Step 2: Expertise */}
                   {currentStep === 2 && (
-                    <div className="space-y-10">
-                      <div className="space-y-6">
+                    <div className="space-y-8 sm:space-y-10">
+                      <div className="space-y-4 sm:space-y-6">
                         <div className="space-y-2">
                           <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                             Main Category
@@ -741,7 +721,7 @@ export default function VendorOnboarding({
                                 specialties: [],
                               });
                             }}
-                            className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                            className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           >
                             {VENDOR_CATEGORIES.map((category) => (
                               <option
@@ -758,7 +738,6 @@ export default function VendorOnboarding({
                           <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                             Sub Category
                           </label>
-
                           <select
                             value={formData.subCategory}
                             onChange={(e) =>
@@ -768,7 +747,7 @@ export default function VendorOnboarding({
                                 specialties: [],
                               })
                             }
-                            className="w-full bg-slate-100 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50"
+                            className="w-full bg-slate-100 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold focus:ring-2 focus:ring-cyan/50 text-navy"
                           >
                             {selectedCategory.subCategories.map(
                               (subCategory) => (
@@ -788,25 +767,25 @@ export default function VendorOnboarding({
                         <label className="text-[10px] font-black uppercase text-navy/40 tracking-widest px-1">
                           Medical Specializations
                         </label>
-                        <div className="max-h-80 overflow-y-auto pr-2">
-                          <div className="grid grid-cols-2 gap-3">
+                        <div className="max-h-64 sm:max-h-80 overflow-y-auto pr-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                             {selectedSubCategory.specialties.map((item) => (
                               <button
                                 key={item}
                                 onClick={() => toggleSpecialty(item)}
                                 className={cn(
-                                  "p-5 rounded-2xl border-2 text-left transition-all flex items-center justify-between",
+                                  "p-4 sm:p-5 rounded-2xl border-2 text-left transition-all flex items-center justify-between gap-3",
                                   formData.specialties.includes(item)
                                     ? "border-navy bg-navy text-white shadow-xl shadow-navy/20"
                                     : "border-slate-50 bg-slate-50/50 hover:border-navy/10",
                                 )}
                               >
-                                <span className="text-[9px] font-black uppercase tracking-widest">
+                                <span className="text-[9px] font-black uppercase tracking-widest leading-normal">
                                   {item}
                                 </span>
                                 <div
                                   className={cn(
-                                    "w-4 h-4 rounded border flex items-center justify-center transition-all",
+                                    "w-4 h-4 rounded border flex items-center justify-center transition-all shrink-0",
                                     formData.specialties.includes(item)
                                       ? "bg-white/20 border-white/40"
                                       : "border-slate-300",
@@ -826,8 +805,8 @@ export default function VendorOnboarding({
 
                   {/* Step 3: Success Plan */}
                   {currentStep === 3 && (
-                    <div className="space-y-8">
-                      <div className="grid grid-cols-3 gap-6">
+                    <div className="space-y-6 sm:space-y-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                         {plans.map((p) => (
                           <button
                             key={p.name}
@@ -835,7 +814,7 @@ export default function VendorOnboarding({
                               setFormData({ ...formData, plan: p.name as any })
                             }
                             className={cn(
-                              "relative p-8 rounded-[32px] border-2 text-left transition-all h-full flex flex-col",
+                              "relative p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] border-2 text-left transition-all h-full flex flex-col",
                               formData.plan === p.name
                                 ? "border-brand-red bg-white shadow-2xl scale-[1.02]"
                                 : "border-slate-100 bg-slate-50/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100",
@@ -849,8 +828,8 @@ export default function VendorOnboarding({
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-navy/40 mb-2">
                               {p.name} PLAN
                             </h4>
-                            <div className="flex items-baseline gap-1 mb-8">
-                              <span className="text-3xl font-black text-navy">
+                            <div className="flex items-baseline gap-1 mb-6 sm:mb-8">
+                              <span className="text-2xl sm:text-3xl font-black text-navy">
                                 ${p.price}
                               </span>
                               <span className="text-[8px] font-bold text-navy/40 uppercase">
@@ -858,7 +837,7 @@ export default function VendorOnboarding({
                               </span>
                             </div>
 
-                            <div className="space-y-4 flex-1">
+                            <div className="space-y-3 sm:space-y-4 flex-1">
                               {p.features.map((f, i) => (
                                 <div key={i} className="flex gap-2 items-start">
                                   <Check
@@ -875,20 +854,20 @@ export default function VendorOnboarding({
                         ))}
                       </div>
 
-                      <div className="bg-navy rounded-3xl p-8 text-white flex items-center justify-between">
+                      <div className="bg-navy rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                           <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">
                             Secured Checkout via Stripe
                           </p>
-                          <h4 className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] font-black uppercase tracking-tighter">
+                          <h4 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-tighter">
                             GMAA Institutional Enrollment
                           </h4>
                         </div>
-                        <div className="text-right">
+                        <div className="text-left sm:text-right shrink-0">
                           <p className="text-[10px] font-black uppercase tracking-widest opacity-40">
                             Total Due
                           </p>
-                          <p className="text-2xl font-black">
+                          <p className="text-xl sm:text-2xl font-black">
                             $
                             {plans.find((p) => p.name === formData.plan)?.price}{" "}
                             USD
@@ -900,28 +879,28 @@ export default function VendorOnboarding({
 
                   {/* Step 4: Account Created */}
                   {currentStep === 4 && (
-                    <div className="flex flex-col items-center justify-center text-center py-12">
-                      <div className="w-24 h-24 bg-cyan/10 rounded-[40px] flex items-center justify-center text-cyan mb-8">
-                        <ShieldCheck size={48} />
+                    <div className="flex flex-col items-center justify-center text-center py-6 sm:py-12">
+                      <div className="w-16 h-16 sm:w-24 sm:h-24 bg-cyan/10 rounded-[24px] sm:rounded-[40px] flex items-center justify-center text-cyan mb-6 sm:mb-8 shrink-0">
+                        <ShieldCheck size={36} className="sm:size-[48px]" />
                       </div>
 
-                      <h3 className="text-[clamp(2rem,4vw,4rem)] font-bold text-navy uppercase tracking-tighter mb-4">
+                      <h3 className="text-xl sm:text-3xl lg:text-4xl font-bold text-navy uppercase tracking-tighter mb-3 sm:mb-4 leading-tight">
                         Registration
                         <br />
                         Successful
                       </h3>
 
-                      <p className="text-xs font-bold text-navy/40 uppercase tracking-widest max-w-xl leading-relaxed mb-10">
-                        Your organisation has been successfully registered with
-                        <span className="text-cyan"> Global MAA</span>. Login
+                      <p className="text-[10px] sm:text-xs font-bold text-navy/40 uppercase tracking-widest max-w-xl leading-relaxed mb-8 sm:mb-10 px-2">
+                        Your organisation has been successfully registered with{" "}
+                        <span className="text-cyan">Global MAA</span>. Login
                         credentials will be delivered to your registered email
                         address.
                       </p>
 
-                      <div className="w-full max-w-2xl bg-slate-50 rounded-[32px] p-8 border border-slate-100 text-left">
+                      <div className="w-full max-w-2xl bg-slate-50 rounded-[20px] sm:rounded-[32px] p-5 sm:p-8 border border-slate-100 text-left">
                         {vendorCredentials && (
-                          <div className="mb-8 bg-white rounded-2xl p-6 border border-cyan/20">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan mb-4">
+                          <div className="mb-6 sm:mb-8 bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-cyan/20">
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan mb-3 sm:mb-4">
                               Vendor Portal Credentials
                             </h4>
 
@@ -930,8 +909,7 @@ export default function VendorOnboarding({
                                 <p className="text-[9px] font-black uppercase tracking-widest text-navy/40">
                                   Username
                                 </p>
-
-                                <p className="font-black text-navy">
+                                <p className="font-black text-navy text-sm sm:text-base">
                                   {vendorCredentials.username}
                                 </p>
                               </div>
@@ -940,13 +918,12 @@ export default function VendorOnboarding({
                                 <p className="text-[9px] font-black uppercase tracking-widest text-navy/40">
                                   Temporary Password
                                 </p>
-
-                                <p className="font-black text-navy">
+                                <p className="font-black text-navy text-sm sm:text-base">
                                   {vendorCredentials.password}
                                 </p>
                               </div>
 
-                              <p className="text-[9px] font-bold uppercase tracking-widest text-amber-600">
+                              <p className="text-[9px] font-bold uppercase tracking-widest text-amber-600 mt-2">
                                 Save these credentials. They will also be sent
                                 to your email.
                               </p>
@@ -954,9 +931,9 @@ export default function VendorOnboarding({
                           </div>
                         )}
 
-                        <div className="space-y-4">
-                          <div className="flex gap-4 items-start">
-                            <div className="w-6 h-6 rounded-full bg-navy text-white flex items-center justify-center text-[10px] font-black">
+                        <div className="space-y-3 sm:space-y-4">
+                          <div className="flex gap-3 sm:gap-4 items-start">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-navy text-white flex items-center justify-center text-[9px] sm:text-[10px] font-black shrink-0 mt-0.5">
                               1
                             </div>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-navy/60">
@@ -964,8 +941,8 @@ export default function VendorOnboarding({
                             </p>
                           </div>
 
-                          <div className="flex gap-4 items-start">
-                            <div className="w-6 h-6 rounded-full bg-navy text-white flex items-center justify-center text-[10px] font-black">
+                          <div className="flex gap-3 sm:gap-4 items-start">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-navy text-white flex items-center justify-center text-[9px] sm:text-[10px] font-black shrink-0 mt-0.5">
                               2
                             </div>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-navy/60">
@@ -973,8 +950,8 @@ export default function VendorOnboarding({
                             </p>
                           </div>
 
-                          <div className="flex gap-4 items-start">
-                            <div className="w-6 h-6 rounded-full bg-navy text-white flex items-center justify-center text-[10px] font-black">
+                          <div className="flex gap-3 sm:gap-4 items-start">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-navy text-white flex items-center justify-center text-[9px] sm:text-[10px] font-black shrink-0 mt-0.5">
                               3
                             </div>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-navy/60">
@@ -982,8 +959,8 @@ export default function VendorOnboarding({
                             </p>
                           </div>
 
-                          <div className="flex gap-4 items-start">
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black">
+                          <div className="flex gap-3 sm:gap-4 items-start">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] sm:text-[10px] font-black shrink-0 mt-0.5">
                               4
                             </div>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-navy/60">
@@ -1000,37 +977,37 @@ export default function VendorOnboarding({
             </div>
 
             {/* Actions */}
-            <div className="mt-16 flex items-center justify-between pt-12 border-t border-slate-100">
+            <div className="mt-8 sm:mt-16 flex items-center justify-between pt-6 sm:pt-12 border-t border-slate-100">
               {currentStep < STEPS.length ? (
                 <>
                   <button
                     onClick={prevStep}
                     disabled={currentStep === 1}
                     className={cn(
-                      "flex items-center gap-3 text-xs font-black uppercase tracking-widest transition-all",
+                      "flex items-center gap-2 sm:gap-3 text-xs font-black uppercase tracking-widest transition-all",
                       currentStep === 1
                         ? "opacity-0 pointer-events-none"
                         : "text-navy hover:text-cyan",
                     )}
                   >
-                    <ChevronLeft size={18} /> Previous
+                    <ChevronLeft size={16} /> Previous
                   </button>
 
                   <button
                     onClick={nextStep}
-                    className="bg-navy text-white px-12 py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-navy/20 group"
+                    className="bg-navy text-white px-8 sm:px-12 py-3.5 sm:py-5 rounded-xl sm:rounded-2xl font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-navy/20 group shrink-0"
                   >
                     {currentStep === 3 ? "Commit & Pay" : "Next Step"}
                     <ChevronRight
-                      className="inline-block ml-2 group-hover:translate-x-1 transition-transform"
-                      size={18}
+                      className="inline-block ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform"
+                      size={16}
                     />
                   </button>
                 </>
               ) : (
                 <button
                   onClick={onComplete}
-                  className="w-full bg-navy text-white py-6 rounded-2xl font-black uppercase tracking-[0.4em] text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-navy/20"
+                  className="w-full bg-navy text-white py-4 sm:py-6 rounded-xl sm:rounded-2xl font-black uppercase tracking-[0.25em] sm:tracking-[0.4em] text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-navy/20"
                 >
                   Establish Connection
                 </button>
@@ -1040,49 +1017,5 @@ export default function VendorOnboarding({
         </div>
       </motion.div>
     </div>
-  );
-}
-
-function Plus({ size, className }: { size: number; className?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
-}
-
-function CheckCircle({
-  size,
-  className,
-}: {
-  size: number;
-  className?: string;
-}) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
   );
 }

@@ -294,8 +294,7 @@ export default function Layout() {
           </div>
           <div className="mt-20 md:mt-32 pt-8 md:pt-12 border-t border-navy/5 flex flex-col md:flex-row justify-between gap-8 md:gap-10">
             <p className="text-[9px] md:text-[10px] font-bold text-navy/20 uppercase tracking-[0.2em] md:tracking-[0.4em]">
-              © 2026 Global Med Access Alliance Pvt. Ltd. PROVIDER NETWORK
-              ACCESS ONLY.
+              © 2026 Global Med Access Alliance Pvt. Ltd.
             </p>
             <div className="flex flex-wrap gap-6 md:gap-12">
               <span className="text-[9px] md:text-[10px] font-bold text-navy/20 uppercase tracking-[0.2em] md:tracking-[0.4em] hover:text-brand-red transition-colors cursor-pointer">
@@ -303,14 +302,6 @@ export default function Layout() {
               </span>
               <span className="text-[9px] md:text-[10px] font-bold text-navy/20 uppercase tracking-[0.2em] md:tracking-[0.4em] hover:text-cyan transition-colors cursor-pointer">
                 LinkedIn
-              </span>
-              <span
-                onClick={() => {
-                  navigate("/admin");
-                }}
-                className="text-[9px] md:text-[10px] font-bold text-navy/20 uppercase tracking-[0.2em] md:tracking-[0.4em] hover:text-brand-red transition-colors cursor-pointer"
-              >
-                Terminal
               </span>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Brain, Globe, Database, ArrowRight, Activity, ClipboardCheck, Sparkles } from 'lucide-react';
+import { Shield, Brain, Globe, Database, ArrowRight, ClipboardCheck, Sparkles } from 'lucide-react';
 
 const ECOSYSTEM_SERVICES = [
   {
@@ -43,28 +43,28 @@ const ECOSYSTEM_SERVICES = [
 
 export default function ServiceEcosystem() {
   return (
-    <section className="py-32 bg-slate-bg/30 relative overflow-hidden">
+    <section className="py-16 sm:py-24 md:py-32 bg-slate-bg/30 relative overflow-hidden">
       {/* Decorative architectural elements */}
       <div className="absolute top-0 left-1/4 w-[1px] h-full bg-navy/5" />
       <div className="absolute top-0 right-1/4 w-[1px] h-full bg-navy/5" />
 
       <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-20 items-start mb-24">
-          <div className="lg:w-1/3">
-            <div className="flex items-center gap-3 mb-6">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-start mb-16 sm:mb-24">
+          <div className="w-full lg:w-1/3">
+            <div className="flex items-center gap-3 mb-5 sm:mb-6">
               <div className="w-8 h-1 bg-brand-red rounded-full" />
               <span className="text-navy font-bold uppercase tracking-[0.4em] text-[10px]">How we help</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-light tracking-tighter text-navy mb-8 leading-[0.9]">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tighter text-navy mb-6 sm:mb-8 leading-[1.05] sm:leading-[0.9]">
               Every service you <br />
               <span className="font-serif italic font-medium text-gradient">could need.</span>
             </h2>
-            <p className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] text-navy/50 font-medium leading-relaxed mb-12">
+            <p className="text-[clamp(1rem,0.5vw+0.9rem,1.125rem)] text-navy/50 font-medium leading-relaxed mb-8 sm:mb-12">
               Accessing emergency flights, arranging comforting homecare layers, or importing custom medical gear should be incredibly simple. We connect you to reliable teams, anywhere.
             </p>
             
             <div className="flex flex-col gap-6">
-               <div className="p-6 rounded-3xl bg-white border border-navy/5 shadow-sm">
+               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-navy/5 shadow-sm">
                   <div className="flex items-center gap-4 mb-2">
                      <ClipboardCheck className="text-cyan" size={18} />
                      <span className="text-[10px] font-black uppercase tracking-widest text-navy">Quality Checked</span>
@@ -76,33 +76,33 @@ export default function ServiceEcosystem() {
             </div>
           </div>
 
-          <div className="lg:w-2/3 grid md:grid-cols-2 gap-8">
+          <div className="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {ECOSYSTEM_SERVICES.map((service, index) => (
               <motion.div
                 key={service.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="group bg-white p-10 rounded-[48px] border border-navy/5 hover:border-cyan/30 hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+                className="group bg-white p-6 sm:p-10 rounded-[24px] sm:rounded-[48px] border border-navy/5 hover:border-cyan/30 hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
               >
                 {/* Decorative Pattern Background */}
                 <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.02] pointer-events-none translate-x-10 -translate-y-10">
                    <Database size={120} />
                 </div>
 
-                <div className={`w-14 h-14 ${service.bgColor} ${service.color} rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                  <service.icon size={28} />
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${service.bgColor} ${service.color} rounded-xl sm:rounded-2xl flex items-center justify-center mb-6 sm:mb-8 shadow-sm group-hover:scale-110 transition-transform duration-500 shrink-0`}>
+                  <service.icon size={24} className="sm:size-[28px]" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-navy mb-4">{service.title}</h3>
-                <p className="text-sm text-navy/50 leading-relaxed mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-navy mb-3 sm:mb-4">{service.title}</h3>
+                <p className="text-sm text-navy/50 leading-relaxed mb-6 sm:mb-8">
                   {service.description}
                 </p>
 
-                <ul className="space-y-3 mb-10">
+                <ul className="space-y-3 mb-8 sm:mb-10">
                   {service.features.map(feature => (
                     <li key={feature} className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-cyan/20" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-cyan/20 shrink-0" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-navy/60">{feature}</span>
                     </li>
                   ))}
@@ -118,24 +118,24 @@ export default function ServiceEcosystem() {
         </div>
 
         {/* Global Connectivity Visualization */}
-        <div className="bg-navy rounded-[48px] p-12 md:p-20 text-white relative overflow-hidden">
+        <div className="bg-navy rounded-[24px] sm:rounded-[48px] p-8 sm:p-12 md:p-20 text-white relative overflow-hidden">
            <div className="absolute inset-0 opacity-[0.03] noise" />
-           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-              <div className="max-w-md">
-                 <h3 className="text-3xl font-light tracking-tight mb-6">A more <br /><span className="font-serif italic text-cyan">complete way to care.</span></h3>
-                 <p className="text-sm text-white/40 leading-relaxed">
+           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12">
+              <div className="max-w-md w-full">
+                 <h3 className="text-2xl sm:text-3xl font-light tracking-tight mb-4 sm:mb-6">A more <br /><span className="font-serif italic text-cyan">complete way to care.</span></h3>
+                 <p className="text-xs sm:text-sm text-white/40 leading-relaxed">
                    We believe that high-quality, practical health coordination should be accessible to everyone, no matter whether they need simple equipment imports or comprehensive surgery pathways.
                  </p>
               </div>
-              <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+              <div className="grid grid-cols-1 xs:grid-cols-3 gap-6 sm:gap-8 md:gap-16 text-center w-full md:w-auto">
                  {[
                    { label: 'Patient Support', val: '24/7' },
                    { label: 'Families Assisted', val: '120k+' },
                    { label: 'Trusted Partners', val: '4,200+' }
                  ].map(stat => (
                    <div key={stat.label} className="text-center">
-                     <div className="text-3xl md:text-5xl font-light mb-2">{stat.val}</div>
-                     <div className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">{stat.label}</div>
+                     <div className="text-2xl sm:text-3xl md:text-5xl font-light mb-1 sm:mb-2">{stat.val}</div>
+                     <div className="text-[9px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-white/30">{stat.label}</div>
                    </div>
                  ))}
               </div>

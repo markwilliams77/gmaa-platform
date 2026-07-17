@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Star, ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
+import { Star, MapPin, ArrowUpRight } from "lucide-react";
 import type { RegistryVendor } from "../types/registry";
 
 export interface VendorCardProps extends RegistryVendor {
@@ -11,7 +11,6 @@ export default function VendorCard({
   name,
   location,
   mainCategory,
-  subCategory,
   image,
   accreditation,
   specialty,
@@ -24,19 +23,19 @@ export default function VendorCard({
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       onClick={() => onClick && onClick(id)}
-      className={`group relative flex flex-col border-r border-b border-navy/5 bg-white p-8 hover:bg-navy hover:-translate-y-2 hover:shadow-2xl hover:shadow-navy/10 transition-all duration-700 ${onClick ? "cursor-pointer" : ""}`}
+      className={`group relative flex flex-col border-r border-b border-navy/5 bg-white p-6 sm:p-8 hover:bg-navy hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-navy/10 transition-all duration-700 ${onClick ? "cursor-pointer" : ""}`}
     >
       {/* Background Hover Effect */}
       <div className="absolute inset-x-0 bottom-0 h-1 scale-x-0 origin-left bg-brand-red group-hover:scale-x-100 transition-transform duration-500" />
 
       <div className="relative z-10 flex flex-col h-full">
         {/* Floating Category Label */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-start mb-6 sm:mb-8">
           <div className="mixed-caps opacity-100 group-hover:text-cyan transition-colors uppercase tracking-widest text-[9px] font-bold">
             {mainCategory}
           </div>
           {rating && (
-            <div className="flex items-center gap-1 group-hover:text-brand-red transition-colors">
+            <div className="flex items-center gap-1 group-hover:text-brand-red transition-colors text-navy/40">
               <Star size={12} className="fill-current" />
               <span className="text-[10px] font-bold">{rating}</span>
             </div>
@@ -44,21 +43,21 @@ export default function VendorCard({
         </div>
 
         {/* Name & Location */}
-        <h3 className="text-[30px] leading-tight font-serif italic mb-3 text-navy group-hover:text-white transition-all duration-500 transform group-hover:translate-x-2 pr-2">
+        <h3 className="text-2xl sm:text-[30px] leading-tight font-serif italic mb-3 text-navy group-hover:text-white transition-all duration-500 transform group-hover:translate-x-2 pr-2">
           {name}
         </h3>
-        <p className="flex items-center gap-2 text-[11px] font-semibold text-navy/45 uppercase tracking-[0.12em] mb-5 group-hover:text-white/60 transition-colors">
-          <MapPin size={12} />
-          <span>{location}</span>
+        <p className="flex items-center gap-2 text-[11px] font-semibold text-navy/45 uppercase tracking-[0.12em] mb-4 sm:mb-5 group-hover:text-white/60 transition-colors">
+          <MapPin size={12} className="shrink-0" />
+          <span className="truncate">{location}</span>
         </p>
         {specialty && (
-          <p className="text-[10px] italic text-navy/30 group-hover:text-cyan mb-12 transition-colors">
+          <p className="text-[10px] italic text-navy/30 group-hover:text-cyan mb-8 sm:mb-12 transition-colors">
             {specialty}
           </p>
         )}
 
         {/* Visual Anchor */}
-        <div className="relative mb-10 overflow-hidden rounded-3xl aspect-[4/3] bg-slate-100 group-hover:scale-[1.02] transition-all duration-700">
+        <div className="relative mb-6 sm:mb-10 overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] bg-slate-100 group-hover:scale-[1.02] transition-all duration-700">
           <img
             src={image ?? undefined}
             alt={name}
@@ -69,13 +68,13 @@ export default function VendorCard({
         </div>
 
         {/* Accreditation & Stats */}
-        <div className="mt-auto pt-8 border-t border-navy/10 group-hover:border-white/10 flex items-center justify-between">
+        <div className="mt-auto pt-6 sm:pt-8 border-t border-navy/10 group-hover:border-white/10 flex items-center justify-between gap-4">
           {accreditation && accreditation.length > 0 ? (
             <div className="space-y-1">
               <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-navy/30 group-hover:text-white/40 transition-colors">
                 Accredited
               </p>
-              <p className="text-[11px] font-bold text-brand-red group-hover:text-white transition-colors">
+              <p className="text-[11px] font-bold text-brand-red group-hover:text-white transition-colors truncate">
                 {accreditation[0]}
               </p>
             </div>
@@ -83,7 +82,7 @@ export default function VendorCard({
             <div />
           )}
           {rating ? (
-            <div className="text-right">
+            <div className="text-right shrink-0">
               <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-navy/30 group-hover:text-white/40 transition-colors">
                 Rating
               </p>
@@ -98,10 +97,10 @@ export default function VendorCard({
 
         {/* Action Reveal */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-xl shadow-2xl">
+          <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-xl shadow-2xl">
             <ArrowUpRight
               className="text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-              size={30}
+              size={24}
             />
           </div>
         </div>

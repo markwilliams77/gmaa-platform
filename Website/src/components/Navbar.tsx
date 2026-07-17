@@ -179,6 +179,7 @@ export default function Navbar({
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -210,10 +211,14 @@ export default function Navbar({
   else if (path.startsWith("/vendors")) activeView = "vendors";
   else if (path.startsWith("/admin")) activeView = "admin";
 
-  // Dynamic Styles based on Scroll
-  const navTextColor = scrolled ? "text-navy" : "text-white";
-  const navIconColor = scrolled ? "text-navy/50" : "text-white/60";
-  const logoClass = scrolled ? "" : "brightness-0 invert";
+  // COLOR DYNAMISM CALCULATIONS
+  // Only use dynamic transparent headers on the landing/home pages when not scrolled
+  const isHeroPage = path === "/";
+  const isTransparent = isHeroPage && !scrolled;
+
+  const navTextColor = isTransparent ? "text-white" : "text-navy";
+  const navIconColor = isTransparent ? "text-white/60" : "text-navy/50";
+  const logoClass = isTransparent ? "brightness-0 invert" : "";
 
   if (isAdminView) {
     return (
@@ -258,41 +263,104 @@ export default function Navbar({
   }
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      scrolled ? "py-2 bg-white/90 backdrop-blur-xl shadow-xl shadow-navy/5 border-b border-navy/5" : "py-4 md:py-6 bg-transparent"
-    }`}>
-      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-16 flex items-center justify-between gap-4">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isTransparent
+          ? "py-4 md:py-6 bg-transparent"
+          : "py-2 sm:py-3 bg-white/90 backdrop-blur-xl shadow-xl shadow-navy/5 border-b border-navy/5"
+      }`}
+    >
+      <div className="max-w-[1800px] mx-auto px-6 md:px-8 lg:px-10 xl:px-16 flex items-center justify-between gap-4 relative">
         {/* Logo & Portal Switcher Group */}
         <div className="flex items-center gap-4 xl:gap-8 shrink-0">
-          <Link to={computedPortal === "vendor" ? "/vendor" : "/"} className="group shrink-0">
-            <img src="/images/gmaa-logo.png" alt="GMAA" className="h-10 md:h-14 xl:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-[1.02]" />
+          <Link
+            to={computedPortal === "vendor" ? "/vendor" : "/"}
+            className="group shrink-0"
+          >
+            <img
+              src="/images/gmaa-logo.png"
+              alt="GMAA"
+              className={`h-8 xs:h-9 sm:h-10 lg:h-11 xl:h-12 2xl:h-14 w-auto object-contain transition-all duration-300 group-hover:scale-[1.02] ${logoClass}`}
+            />
           </Link>
 
-          <div className="hidden lg:block">
-            <div className="relative flex items-center rounded-full border border-white/40 bg-white/55 backdrop-blur-xl p-1 shadow-lg shadow-navy/5 overflow-hidden">
+          <div className="hidden xl:block">
+            <div
+              className={`relative flex items-center rounded-full border p-1 shadow-lg shadow-navy/5 overflow-hidden transition-colors duration-300 ${
+                isTransparent
+                  ? "border-white/40 bg-white/55 backdrop-blur-xl"
+                  : "border-navy/10 bg-slate-100/85 backdrop-blur-xl"
+              }`}
+            >
               <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className={`absolute top-1 bottom-1 rounded-full bg-navy shadow-lg ${
-                  computedPortal === "patient" ? "left-1 w-[90px] xl:w-[108px]" : "left-[91px] xl:left-[109px] w-[90px] xl:w-[108px]"
+                className={`absolute top-1 bottom-1 rounded-full bg-navy shadow-lg transition-all duration-300 ${
+                  computedPortal === "patient"
+                    ? "left-1 w-[80px] xl:w-[90px] 2xl:w-[108px]"
+                    : "left-[81px] xl:left-[91px] 2xl:left-[109px] w-[80px] xl:w-[90px] 2xl:w-[108px]"
                 }`}
               />
               {/* Patients Toggle */}
-              <Link to="/" className="relative z-10 flex items-center justify-center gap-2 w-[90px] xl:w-[108px] py-2">
-                <User size={13} className={`transition-colors duration-300 ${computedPortal === "patient" ? "text-brand-red" : "text-navy/45"}`} />
-                <span className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${computedPortal === "patient" ? "text-white" : "text-navy/60"}`}>Patients</span>
+              <Link
+                to="/"
+                className="relative z-10 flex items-center justify-center gap-1.5 w-[80px] xl:w-[90px] 2xl:w-[108px] py-1.5 sm:py-2"
+              >
+                <User
+                  size={13}
+                  className={`transition-colors duration-300 ${
+                    computedPortal === "patient"
+                      ? "text-brand-red"
+                      : isTransparent
+                        ? "text-white/50"
+                        : "text-navy/40"
+                  }`}
+                />
+                <span
+                  className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${
+                    computedPortal === "patient"
+                      ? "text-white"
+                      : isTransparent
+                        ? "text-white/60 hover:text-white"
+                        : "text-navy/60 hover:text-navy"
+                  }`}
+                >
+                  Patients
+                </span>
               </Link>
               {/* Vendors Toggle */}
-              <Link to="/vendor" className="relative z-10 flex items-center justify-center gap-2 w-[90px] xl:w-[108px] py-2">
-                <Building2 size={13} className={`transition-colors duration-300 ${computedPortal === "vendor" ? "text-brand-red" : "text-navy/45"}`} />
-                <span className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${computedPortal === "vendor" ? "text-white" : "text-navy/60"}`}>Vendors</span>
+              <Link
+                to="/vendor"
+                className="relative z-10 flex items-center justify-center gap-1.5 w-[80px] xl:w-[90px] 2xl:w-[108px] py-1.5 sm:py-2"
+              >
+                <Building2
+                  size={13}
+                  className={`transition-colors duration-300 ${
+                    computedPortal === "vendor"
+                      ? "text-brand-red"
+                      : isTransparent
+                        ? "text-white/50"
+                        : "text-navy/40"
+                  }`}
+                />
+                <span
+                  className={`text-[9px] xl:text-[10px] font-bold tracking-wide transition-colors duration-300 ${
+                    computedPortal === "vendor"
+                      ? "text-white"
+                      : isTransparent
+                        ? "text-white/60 hover:text-white"
+                        : "text-navy/60 hover:text-navy"
+                  }`}
+                >
+                  Vendors
+                </span>
               </Link>
             </div>
           </div>
         </div>
 
         {/* --- CENTER ZONE: NAV LINKS --- */}
-        <div className="hidden lg:flex flex-[2] items-center justify-center gap-x-6 xl:gap-x-10">
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-x-3 xl:gap-x-5 2xl:gap-x-8">
           {NAV_ITEMS.map((item) => (
             <div
               key={item.label}
@@ -301,7 +369,7 @@ export default function Navbar({
               onMouseLeave={() => setActiveMenu(null)}
             >
               <div
-                className={`flex items-center gap-1.5 cursor-pointer text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-brand-red ${navTextColor}`}
+                className={`flex items-center gap-1 cursor-pointer text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] xl:tracking-[0.16em] 2xl:tracking-[0.2em] transition-colors hover:text-brand-red ${navTextColor}`}
               >
                 {item.to ? (
                   <Link to={item.to}>{item.label}</Link>
@@ -340,8 +408,8 @@ export default function Navbar({
               }
               onClientAccess?.();
             }}
-            className={`relative group overflow-hidden px-4 xl:px-8 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest shadow-xl transition-all active:scale-95 ${
-              scrolled ? "bg-navy text-white" : "bg-white text-navy"
+            className={`hidden lg:block relative group overflow-hidden px-4 xl:px-8 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest shadow-xl transition-all active:scale-95 ${
+              isTransparent ? "bg-white text-navy" : "bg-navy text-white"
             }`}
           >
             <span className="relative z-10">
@@ -360,10 +428,10 @@ export default function Navbar({
                 localStorage.removeItem("gmaa_client_verified");
                 navigate("/");
               }}
-              className={`px-4 xl:px-6 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest border transition-all ${
-                scrolled
-                  ? "border-navy/20 text-navy hover:bg-navy hover:text-white"
-                  : "border-white/30 text-white hover:bg-white hover:text-navy"
+              className={`hidden lg:block px-4 xl:px-6 py-2.5 xl:py-3 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest border transition-all ${
+                isTransparent
+                  ? "border-white/30 text-white hover:bg-white hover:text-navy"
+                  : "border-navy/20 text-navy hover:bg-navy hover:text-white"
               }`}
             >
               Logout
@@ -373,7 +441,7 @@ export default function Navbar({
           {user && (
             <button
               onClick={onLogout}
-              className="p-2.5 xl:p-3 rounded-xl bg-brand-red text-white shadow-lg active:scale-95"
+              className="hidden lg:block p-2.5 xl:p-3 rounded-xl bg-brand-red text-white shadow-lg active:scale-95"
             >
               <LogOut size={16} />
             </button>
@@ -414,49 +482,96 @@ export default function Navbar({
                 <Building2 size={16} /> Vendors
               </Link>
             </div>
+            
+            {/* Dynamic Mobile Menu Accordion */}
             <div className="flex flex-col border-y border-navy/5 py-2">
-              <Link
-                to="/directory"
-                onClick={() => setIsOpen(false)}
-                className="text-sm font-semibold text-navy py-3"
-              >
-                Medical Categories
-              </Link>
-              <Link
-                to="/insights"
-                onClick={() => setIsOpen(false)}
-                className="text-sm font-semibold text-navy py-3"
-              >
-                Network Insights
-              </Link>
+              {NAV_ITEMS.map((item) => {
+                const hasChildren = !!item.children;
+                const isExpanded = expandedMobileMenu === item.label;
+
+                return (
+                  <div key={item.label} className="border-b border-navy/5 last:border-none py-1">
+                    {hasChildren ? (
+                      <div>
+                        <button
+                          onClick={() => setExpandedMobileMenu(isExpanded ? null : item.label)}
+                          className="w-full flex items-center justify-between text-sm font-semibold text-navy py-2.5 text-left"
+                        >
+                          <span>{item.label}</span>
+                          <ChevronDown
+                            size={16}
+                            className={`transition-transform duration-300 ${isExpanded ? "rotate-180 text-brand-red" : "text-navy/40"}`}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="pl-4 flex flex-col gap-2 pb-3 overflow-hidden"
+                            >
+                              {item.children?.map((child) => (
+                                <Link
+                                  key={child.title}
+                                  to={child.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-xs font-medium text-navy/60 hover:text-brand-red py-1.5"
+                                >
+                                  {child.title}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link
+                        to={item.to ?? "#"}
+                        onClick={() => setIsOpen(false)}
+                        className="block text-sm font-semibold text-navy py-2.5"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
+
               {user &&
                 (user.email === "digitalised17@gmail.com" ||
                   user.email?.endsWith("@globalmaa.com")) && (
                   <Link
                     to="/admin"
                     onClick={() => setIsOpen(false)}
-                    className="text-sm font-bold text-brand-red py-3 uppercase tracking-widest"
+                    className="text-sm font-bold text-brand-red py-3 uppercase tracking-widest mt-2 border-t border-navy/5 pt-3"
                   >
                     Admin Panel
                   </Link>
                 )}
             </div>
+
             <button
               onClick={() => {
-                if (
-                  computedPortal === "vendor" &&
-                  activeView === "home" &&
-                  !user
-                )
-                  onLogin?.();
-                else navigate("/vendors");
+                if (computedPortal === "vendor") {
+                  window.location.href = "https://vendor.globalmaa.com";
+                  return;
+                }
+                if (isClientVerified) {
+                  navigate("/vendors");
+                  setIsOpen(false);
+                  return;
+                }
+                onClientAccess?.();
                 setIsOpen(false);
               }}
               className="w-full bg-navy text-white py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest shadow-lg active:scale-95"
             >
-              {computedPortal === "vendor" && activeView === "home" && !user
+              {computedPortal === "vendor"
                 ? "Vendor Login"
-                : "Access Network"}
+                : isClientVerified
+                  ? "Directory"
+                  : "Client Access"}
             </button>
             {user && (
               <button
@@ -467,6 +582,18 @@ export default function Navbar({
                 className="w-full flex items-center justify-center gap-2 py-4 text-brand-red font-bold uppercase tracking-widest text-[11px] border border-brand-red/10 rounded-xl"
               >
                 <LogOut size={16} /> Sign Out
+              </button>
+            )}
+            {isClientVerified && (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("gmaa_client_verified");
+                  navigate("/");
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-4 text-brand-red font-bold uppercase tracking-widest text-[11px] border border-brand-red/10 rounded-xl"
+              >
+                <LogOut size={16} /> Client Logout
               </button>
             )}
           </motion.div>

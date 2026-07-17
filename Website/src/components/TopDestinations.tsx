@@ -16,22 +16,24 @@ interface TopDestinationsProps {
 
 export default function TopDestinations({ onSelectRegion, onViewAll }: TopDestinationsProps) {
   return (
-    <section className="py-20 md:py-24 bg-slate-bg/30">
+    <section className="py-12 sm:py-20 md:py-24 bg-slate-bg/30 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 md:mb-16 gap-6">
           <div>
-             <div className="flex items-center gap-3 mb-4">
-                <Globe size={16} className="text-navy/30" />
+             <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                <Globe size={16} className="text-navy/30 shrink-0" />
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-navy/40 italic">Where we work</span>
              </div>
-             <h2 className="text-[clamp(2rem,4vw,4rem)] font-light tracking-tighter text-navy uppercase">Trusted <span className="font-serif italic font-medium text-gradient pr-2">Quality Care</span></h2>
+             <h2 className="text-[clamp(1.75rem,4vw,4rem)] font-light tracking-tighter text-navy uppercase leading-tight">
+               Trusted <span className="font-serif italic font-medium text-gradient pr-2">Quality Care</span>
+             </h2>
           </div>
           <button 
             onClick={onViewAll}
-            className="flex items-center gap-4 group"
+            className="flex items-center gap-4 group justify-start self-start md:self-auto"
           >
              <span className="text-[10px] font-black uppercase tracking-widest text-navy group-hover:text-cyan transition-colors">See all destinations</span>
-             <div className="w-10 h-10 rounded-full border border-navy/10 flex items-center justify-center group-hover:bg-navy group-hover:text-white transition-all">
+             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-navy/10 flex items-center justify-center group-hover:bg-navy group-hover:text-white transition-all shrink-0">
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
              </div>
           </button>
@@ -45,20 +47,20 @@ export default function TopDestinations({ onSelectRegion, onViewAll }: TopDestin
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.1 }}
               onClick={() => onSelectRegion?.(dest.country)}
-              className="group relative h-80 rounded-[40px] overflow-hidden cursor-pointer"
+              className="group relative h-80 rounded-[24px] sm:rounded-[40px] overflow-hidden cursor-pointer"
             >
               <img src={dest.image} alt={dest.country} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
               
-              <div className="absolute inset-x-8 bottom-8 flex items-end justify-between">
+              <div className="absolute inset-x-6 sm:inset-x-8 bottom-6 sm:bottom-8 flex items-end justify-between gap-4">
                  <div>
                     <div className="flex items-center gap-2 mb-2">
-                       <div className={`w-2 h-2 rounded-full ${dest.color}`} />
-                       <span className="text-white text-xl font-bold">{dest.country}</span>
+                       <div className={`w-2 h-2 rounded-full shrink-0 ${dest.color}`} />
+                       <span className="text-white text-lg sm:text-xl font-bold truncate leading-tight">{dest.country}</span>
                     </div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-white/50">{dest.providers} Providers</p>
                  </div>
-                 <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all -translate-y-4 group-hover:translate-y-0 shadow-2xl">
+                 <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all -translate-y-4 group-hover:translate-y-0 shadow-2xl shrink-0">
                     <ArrowRight size={14} />
                  </div>
               </div>
