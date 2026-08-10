@@ -854,7 +854,7 @@ export default function VendorOnboarding({
                                 ₹{p.price}
                               </span>
                               <span className="text-[8px] font-bold text-navy/40 uppercase">
-                                INR / One-time
+                                INR / Annual
                               </span>
                             </div>
 
