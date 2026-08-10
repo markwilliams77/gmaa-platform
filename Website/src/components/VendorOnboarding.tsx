@@ -272,12 +272,12 @@ export default function VendorOnboarding({
   const plans = [
     {
       name: "Standard",
-      price: "500",
+      price: "50000",
       features: ["Basic Registry Listing", "Email Support", "5 Tender Bids/Mo"],
     },
     {
       name: "Pro",
-      price: "1500",
+      price: "150000",
       features: [
         "Featured Listing",
         "Priority Support",
@@ -287,7 +287,7 @@ export default function VendorOnboarding({
     },
     {
       name: "Premium",
-      price: "2000",
+      price: "200000",
       features: [
         "Global Homepage Feature",
         "Dedicated Account Manager",
@@ -851,10 +851,10 @@ export default function VendorOnboarding({
                             </h4>
                             <div className="flex items-baseline gap-1 mb-8">
                               <span className="text-3xl font-black text-navy">
-                                ${p.price}
+                                ₹{p.price}
                               </span>
                               <span className="text-[8px] font-bold text-navy/40 uppercase">
-                                USD / One-time
+                                INR / Annual
                               </span>
                             </div>
 
@@ -889,9 +889,9 @@ export default function VendorOnboarding({
                             Total Due
                           </p>
                           <p className="text-2xl font-black">
-                            $
+                            ₹
                             {plans.find((p) => p.name === formData.plan)?.price}{" "}
-                            USD
+                            INR
                           </p>
                         </div>
                       </div>
