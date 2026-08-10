@@ -22,9 +22,9 @@ const validDocumentTypes = new Set([
   "tax_identification",
 ]);
 const planAmountsInPaise: Record<string, number> = {
-  Standard: 100,
-  Pro: 200,
-  Premium: 300,
+  Standard: 5000000,
+  Pro: 15000000,
+  Premium: 20000000,
 };
 
 const immutableOnboardingStatuses = new Set(["PAYMENT_SUCCESS", "CANCELLED"]);
