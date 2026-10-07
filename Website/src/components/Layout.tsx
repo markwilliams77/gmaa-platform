@@ -271,7 +271,7 @@ export default function Layout() {
                   </li>
                 </ul>
               </div>
-              <div className="hidden lg:block space-y-4">
+              <div className="space-y-4">
                 <h4 className="text-xs font-bold uppercase tracking-widest text-navy">
                   Legal
                 </h4>
