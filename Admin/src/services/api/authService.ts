@@ -1,4 +1,4 @@
-import api from './client';
+import api, { setCsrfToken } from './client';
 import {
   AdminCredentials,
   AdminGenerateResponse,
@@ -20,41 +20,49 @@ export const authService = {
       password,
     } as AuthLoginRequest);
 
-    console.log("LOGIN RESPONSE:", response.data); //temporary need to remove chutiya gpt
-    console.log("TOKEN CHECK:", response.data.token); //temporary need to remove
-    console.log(response.data); //temporary need to remove
+    setCsrfToken(response.data.csrfToken);
 
-    if (response.data.token) {
-  console.log("SAVING TOKEN");
-
-  localStorage.setItem('auth_token', response.data.token);
-
-  console.log(
-    "AFTER SAVE:",
-    localStorage.getItem('auth_token')
-  );
-
-  localStorage.setItem(
-    'admin_user',
-    JSON.stringify(response.data.user)
-  );
-}
+    if (response.data.user) {
+      authService.storeUser(response.data.user);
+    }
 
     return response.data;
   },
 
-  logout: (): void => {
-    localStorage.removeItem('auth_token');
+  logout: async (): Promise<void> => {
+    try {
+      await api.post('/auth/logout', {});
+    } finally {
+      authService.clearStoredUser();
+    }
+  },
+
+  getProfile: async () => {
+    const response = await api.get('/auth/profile');
+    return response.data;
+  },
+
+  storeUser: (user: unknown): void => {
+    localStorage.setItem('admin_user', JSON.stringify(user));
+  },
+
+  clearStoredUser: (): void => {
     localStorage.removeItem('admin_user');
   },
 
   getStoredToken: (): string | null => {
-    return localStorage.getItem('auth_token');
+    return null;
   },
 
   getStoredUser: () => {
     const user = localStorage.getItem('admin_user');
-    return user ? JSON.parse(user) : null;
+    if (!user) return null;
+    try {
+      return JSON.parse(user);
+    } catch {
+      localStorage.removeItem('admin_user');
+      return null;
+    }
   },
 
   downloadCredentials: (credentials: AdminCredentials): void => {

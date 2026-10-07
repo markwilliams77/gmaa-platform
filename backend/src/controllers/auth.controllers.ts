@@ -1,8 +1,10 @@
 // controllers/auth.controllers.ts
+import crypto from "crypto";
 import { Request, Response } from "express";
 import { prisma } from "../configs/db";
 import { signToken } from "../utils/jwt";
 import vendorLoginService from "../services/vendorLogin.service";
+import { clearAuthCookies, setAuthCookies } from "../utils/cookies";
 
 const bcryptjs = require("bcrypt") as {
   compare(data: string, encrypted: string): Promise<boolean>;
@@ -17,10 +19,24 @@ export const getProfile = async (req: Request, res: Response) => {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { vendor: true }
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      vendorStatus: true,
+    },
   });
 
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
   res.json(user);
+};
+
+export const logout = async (_req: Request, res: Response) => {
+  clearAuthCookies(res);
+  return res.json({ message: "Logged out" });
 };
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -38,7 +54,6 @@ export const updateProfile = async (req: Request, res: Response) => {
 export const vendorLogin = async (req: Request, res: Response) => {
   const username = typeof req.body.username === "string" ? req.body.username.trim() : "";
   const password = typeof req.body.password === "string" ? req.body.password : "";
-  
 
   if (!username || !password) {
     return res.status(400).json({ message: "Username and password are required" });
@@ -60,46 +75,48 @@ export const vendorLogin = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // fetch onboarding details for convenience
     const vendorOnboarding = await prisma.vendorOnboarding.findUnique({
       where: { id: loginInfo.vendorOnboardingId },
-});
+    });
 
-const user = await prisma.user.findUnique({
-  where: {
-    email: vendorOnboarding?.email ?? "",
-  },
-});
+    const user = await prisma.user.findUnique({
+      where: {
+        email: vendorOnboarding?.email ?? "",
+      },
+    });
 
-if (!user) {
-  return res.status(404).json({
-    message: "User account not found",
-  });
-}
+    if (!user) {
+      return res.status(404).json({
+        message: "User account not found",
+      });
+    }
 
-const token = signToken({
-  id: user.id,
-  username: loginInfo.username,
-  vendorOnboardingId: loginInfo.vendorOnboardingId,
-  role: "VENDOR",
-});
+    const token = signToken({
+      id: user.id,
+      username: loginInfo.username,
+      vendorOnboardingId: loginInfo.vendorOnboardingId,
+      role: "VENDOR",
+    });
+
+    const csrfToken = crypto.randomBytes(32).toString("hex");
+    setAuthCookies(res, token, csrfToken);
 
     return res.json({
-  token,
-  vendor: {
-    id: loginInfo.id,
-    username: loginInfo.username,
-    status: loginInfo.status,
-    vendorOnboardingId: loginInfo.vendorOnboardingId,
-    vendorOnboarding,
-    user: {
-      id: user.id,
-      email: user.email,
-      vendorStatus: user.vendorStatus,
-      role: user.role,
-    },
-  },
-});
+      vendor: {
+        id: loginInfo.id,
+        username: loginInfo.username,
+        status: loginInfo.status,
+        vendorOnboardingId: loginInfo.vendorOnboardingId,
+        vendorOnboarding,
+        user: {
+          id: user.id,
+          email: user.email,
+          vendorStatus: user.vendorStatus,
+          role: user.role,
+        },
+      },
+      csrfToken,
+    });
   } catch (error) {
     console.error("vendorLogin error:", error);
     return res.status(500).json({ message: "Failed to login vendor" });
@@ -161,13 +178,16 @@ export const adminLogin = async (req: Request, res: Response) => {
       role: user.role,
     });
 
+    const csrfToken = crypto.randomBytes(32).toString("hex");
+    setAuthCookies(res, token, csrfToken);
+
     return res.json({
-      token,
       user: {
         id: user.id,
         email: user.email,
         role: user.role,
       },
+      csrfToken,
     });
   } catch (error) {
     console.error("adminLogin error:", error);
@@ -178,33 +198,3 @@ export const adminLogin = async (req: Request, res: Response) => {
   }
 };
 
-export const resetVendorPassword = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const passwordHash = await bcrypt.hash(
-      "Apollo@123",
-      10
-    );
-
-    await prisma.vendorLoginInfo.update({
-      where: {
-        username: "GMAA-67A0C3",
-      },
-      data: {
-        passwordHash,
-      },
-    });
-
-    return res.json({
-      message: "Password reset",
-    });
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      message: "Failed to reset password",
-    });
-  }
-};

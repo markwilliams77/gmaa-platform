@@ -5,7 +5,8 @@ import { createLeadActivity } from "../services/activity.service";
 export const createLeadNote = async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
-    const { note, createdBy } = req.body;
+    const { note } = req.body;
+    const createdBy = (req as any).user.email || (req as any).user.id;
 
     if (!note) {
       return res.status(400).json({
@@ -27,7 +28,7 @@ export const createLeadNote = async (req: Request, res: Response) => {
       data: {
         leadId: id,
         note,
-        createdBy: createdBy || "SYSTEM",
+        createdBy,
       },
     });
 
@@ -35,7 +36,7 @@ export const createLeadNote = async (req: Request, res: Response) => {
       leadId: id,
       activity: "NOTE_ADDED",
       description: note,
-      createdBy: createdBy || "SYSTEM",
+      createdBy,
     });
 
     return res.status(201).json(leadNote);

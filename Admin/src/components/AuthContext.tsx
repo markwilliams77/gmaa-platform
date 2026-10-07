@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { authService } from '../services/api';
 
 type AdminUser = {
@@ -21,6 +21,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => authService.getStoredUser());
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    authService.getProfile()
+      .then((user) => {
+        if (!active) return;
+        authService.storeUser(user);
+        setAdminUser(user);
+      })
+      .catch(() => {
+        if (!active) return;
+        authService.clearStoredUser();
+        setAdminUser(null);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const effectiveUser = useMemo(() => {
     if (!adminUser) return null;
@@ -36,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <AuthContext.Provider
       value={{
         user: effectiveUser,
-        loading: false,
+        loading,
         error: undefined,
         profile: effectiveUser,
         setSimulationUser: setAdminUser,

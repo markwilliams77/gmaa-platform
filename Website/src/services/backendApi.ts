@@ -5,6 +5,31 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const api = (path: string) => `${API_BASE}${path}`;
+let csrfToken = "";
+
+export const setCsrfToken = (token?: string) => {
+  csrfToken = token || "";
+};
+
+const apiFetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
+  const method = (init.method || "GET").toUpperCase();
+  const headers = new Headers(init.headers);
+
+  if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
+    if (!csrfToken) {
+      const csrfResponse = await fetch(`${API_BASE}/auth/csrf-token`, {
+        credentials: "include",
+      });
+      if (csrfResponse.ok) {
+        const data = await csrfResponse.json();
+        csrfToken = data.csrfToken || "";
+      }
+    }
+    if (csrfToken) headers.set("X-CSRF-Token", csrfToken);
+  }
+
+  return fetch(input, { ...init, headers, credentials: "include" });
+};
 
 export interface Consultation {
   id?: string;
@@ -25,6 +50,8 @@ export interface Consultation {
   details?: Record<string, string>;
 
   status?: string;
+
+  consentAccepted?: boolean;
 
   createdAt?: string;
 }
@@ -92,8 +119,20 @@ export interface ChatMessage {
 export const backendApi = {
   // User Profile
 
+  async getProfile() {
+    const res = await apiFetch(`${API_BASE}/auth/profile`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Session expired");
+    return data;
+  },
+
+  async logout() {
+    await apiFetch(`${API_BASE}/auth/logout`, { method: "POST" });
+    setCsrfToken();
+  },
+
   async getVendorProfile(vendorId: string) {
-    const res = await fetch(`${API_BASE}/registry/vendors/${vendorId}`);
+    const res = await apiFetch(`${API_BASE}/registry/vendors/${vendorId}`);
 
     const data = await res.json();
 
@@ -105,11 +144,12 @@ export const backendApi = {
   },
 
   async loginVendor(username: string, password: string) {
-    const res = await fetch(`${API_BASE}/auth/vendor-login`, {
+    const res = await apiFetch(`${API_BASE}/auth/vendor-login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         username,
         password,
@@ -122,15 +162,18 @@ export const backendApi = {
       throw new Error(data.message || "Vendor login failed");
     }
 
+    setCsrfToken(data.csrfToken);
+
     return data;
   },
 
   async loginAdmin(email: string, password: string) {
-    const res = await fetch(`${API_BASE}/auth/admin-login`, {
+    const res = await apiFetch(`${API_BASE}/auth/admin-login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -143,6 +186,8 @@ export const backendApi = {
       throw new Error(data.message || "Admin login failed");
     }
 
+    setCsrfToken(data.csrfToken);
+
     return data;
   },
 
@@ -154,7 +199,7 @@ export const backendApi = {
     role?: string;
     specializations?: string[];
   }): Promise<any> {
-    const res = await fetch(api("/users/sync"), {
+    const res = await apiFetch(api("/users/sync"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -164,20 +209,20 @@ export const backendApi = {
   },
 
   async fetchVendors(): Promise<any[]> {
-    const res = await fetch(api("/users/role/vendors"));
+    const res = await apiFetch(api("/users/role/vendors"));
     if (!res.ok) return [];
     return res.json();
   },
 
   // Consultations / Leads
   async fetchConsultations(): Promise<Consultation[]> {
-    const res = await fetch(`${API_BASE}/consultations`);
+    const res = await apiFetch(`${API_BASE}/consultations`);
     if (!res.ok) return [];
     return res.json();
   },
 
   async submitConsultation(data: Consultation): Promise<Consultation> {
-    const res = await fetch(`${API_BASE}/consultations`, {
+    const res = await apiFetch(`${API_BASE}/consultations`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -188,7 +233,7 @@ export const backendApi = {
 
   // Tenders
   async fetchTenders(): Promise<Tender[]> {
-    const res = await fetch(api("/tenders"));
+    const res = await apiFetch(api("/tenders"));
     if (!res.ok) return [];
     return res.json();
   },
@@ -197,7 +242,7 @@ export const backendApi = {
     tenderData: Omit<Tender, "id">,
     vendorEmails: string[],
   ): Promise<any> {
-    const res = await fetch(api("/tenders"), {
+    const res = await apiFetch(api("/tenders"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tenderData, vendorEmails }),
@@ -208,13 +253,13 @@ export const backendApi = {
 
   // Bids
   async fetchBids(): Promise<Bid[]> {
-    const res = await fetch(api("/bids"));
+    const res = await apiFetch(api("/bids"));
     if (!res.ok) return [];
     return res.json();
   },
 
   async submitBid(bidData: Omit<Bid, "id">): Promise<Bid> {
-    const res = await fetch(api("/bids"), {
+    const res = await apiFetch(api("/bids"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bidData),
@@ -225,7 +270,7 @@ export const backendApi = {
 
   // Support Tickets
   async fetchSupportTickets(): Promise<SupportTicket[]> {
-    const res = await fetch(api("/support-tickets"));
+    const res = await apiFetch(api("/support-tickets"));
     if (!res.ok) return [];
     return res.json();
   },
@@ -233,7 +278,7 @@ export const backendApi = {
   async submitSupportTicket(
     ticketData: Omit<SupportTicket, "id">,
   ): Promise<SupportTicket> {
-    const res = await fetch(api("/support-tickets"), {
+    const res = await apiFetch(api("/support-tickets"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(ticketData),
@@ -243,7 +288,7 @@ export const backendApi = {
   },
 
   async fetchTicketMessages(ticketId: string): Promise<TicketMessage[]> {
-    const res = await fetch(`/api/support-tickets/${ticketId}/messages`);
+    const res = await apiFetch(`/api/support-tickets/${ticketId}/messages`);
     if (!res.ok) return [];
     return res.json();
   },
@@ -257,7 +302,7 @@ export const backendApi = {
       status?: string;
     },
   ): Promise<TicketMessage> {
-    const res = await fetch(`/api/support-tickets/${ticketId}/messages`, {
+    const res = await apiFetch(`/api/support-tickets/${ticketId}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(messageData),
@@ -268,13 +313,13 @@ export const backendApi = {
 
   // Conversations / Chat overlay
   async fetchChats(): Promise<ChatThread[]> {
-    const res = await fetch(api("/chats"));
+    const res = await apiFetch(api("/chats"));
     if (!res.ok) return [];
     return res.json();
   },
 
   async initiateChat(chatData: Omit<ChatThread, "id">): Promise<ChatThread> {
-    const res = await fetch(api("/chats"), {
+    const res = await apiFetch(api("/chats"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(chatData),
@@ -284,7 +329,7 @@ export const backendApi = {
   },
 
   async fetchChatMessages(chatId: string): Promise<ChatMessage[]> {
-    const res = await fetch(`/api/chats/${chatId}/messages`);
+    const res = await apiFetch(`/api/chats/${chatId}/messages`);
     if (!res.ok) return [];
     return res.json();
   },
@@ -293,7 +338,7 @@ export const backendApi = {
     chatId: string,
     msgData: { senderId: string; senderName: string; text: string },
   ): Promise<ChatMessage> {
-    const res = await fetch(`/api/chats/${chatId}/messages`, {
+    const res = await apiFetch(`/api/chats/${chatId}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(msgData),
@@ -303,7 +348,7 @@ export const backendApi = {
   },
 
   async sendOtp(phone: string, mode: "login" | "signup", email?: string) {
-    const res = await fetch(`${API_BASE}/auth/send-otp`, {
+    const res = await apiFetch(`${API_BASE}/auth/send-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -325,7 +370,7 @@ export const backendApi = {
   },
 
   async createVendorOnboarding(data: any) {
-    const res = await fetch(`${API_BASE}/vendors/onboarding`, {
+    const res = await apiFetch(`${API_BASE}/vendors/onboarding`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -345,7 +390,7 @@ export const backendApi = {
   },
 
   async createVendorOrder(vendorId: string) {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE}/vendors/${vendorId}/payments/razorpay/order`,
       {
         method: "POST",
@@ -372,7 +417,7 @@ export const backendApi = {
       razorpay_signature: string;
     },
   ) {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE}/vendors/${vendorId}/payments/razorpay/verify`,
       {
         method: "POST",
@@ -393,7 +438,7 @@ export const backendApi = {
   },
 
   async createVendorLogin(vendorId: string, password: string) {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE}/vendors/${vendorId}/login-info-public`,
       {
         method: "POST",
@@ -416,7 +461,7 @@ export const backendApi = {
   },
 
   async verifyOtp(phone: string, code: string) {
-    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+    const res = await apiFetch(`${API_BASE}/auth/verify-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

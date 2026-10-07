@@ -25,6 +25,7 @@ export const createConsultation = async (req: Request, res: Response) => {
       vendorName,
 
       details,
+      consentAccepted,
     } = req.body;
 
     const parsedPhone = phone ? parsePhoneNumberFromString(phone) : undefined;
@@ -39,6 +40,10 @@ export const createConsultation = async (req: Request, res: Response) => {
       return res.status(400).json({
         message: "name and email are required",
       });
+    }
+
+    if (consentAccepted !== true) {
+      return res.status(400).json({ message: "Consent is required" });
     }
 
     const consultation = await prisma.consultation.create({
@@ -58,6 +63,8 @@ export const createConsultation = async (req: Request, res: Response) => {
         vendorName,
 
         details,
+        consentAcceptedAt: new Date(),
+        consentPolicyVersion: "v1",
       },
     });
 

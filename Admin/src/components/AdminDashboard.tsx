@@ -3277,7 +3277,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <div className="grid gap-4">
             <Metric label="Identifier" value={user?.username || user?.email} />
             <Metric label="Email" value={user?.email} />
-            <Metric label="Session Type" value="JWT bearer token" />
+            <Metric label="Session Type" value="HTTP-only cookie" />
           </div>
         </Panel>
 

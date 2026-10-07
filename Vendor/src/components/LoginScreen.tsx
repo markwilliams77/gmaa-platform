@@ -18,7 +18,6 @@ export default function LoginScreen({ onLogin }: Props) {
 
       const response = await authService.login(username, password);
 
-      localStorage.setItem("vendorToken", response.token);
       localStorage.setItem("vendorData", JSON.stringify(response.vendor));
 
       onLogin(response.vendor);

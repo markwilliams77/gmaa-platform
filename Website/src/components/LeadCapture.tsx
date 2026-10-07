@@ -34,6 +34,7 @@ export default function LeadCapture({
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hasConsent, setHasConsent] = useState(false);
 
   const [formData, setFormData] = useState({
     category: "",
@@ -66,6 +67,7 @@ export default function LeadCapture({
 
     setStep(1);
     setIsSubmitted(false);
+    setHasConsent(false);
 
     setFormData((prev) => ({
       ...prev,
@@ -85,6 +87,9 @@ export default function LeadCapture({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!hasConsent) {
+      return;
+    }
     setLoading(true);
     try {
       await backendApi.submitConsultation({
@@ -105,6 +110,7 @@ export default function LeadCapture({
         details: formData.dynamicFields,
 
         status: "new",
+        consentAccepted: true,
       });
 
       setIsSubmitted(true);
@@ -541,6 +547,30 @@ export default function LeadCapture({
                               )}
                             </div>
 
+                            <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left">
+                              <input
+                                type="checkbox"
+                                checked={hasConsent}
+                                onChange={(e) => setHasConsent(e.target.checked)}
+                                className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan focus:ring-cyan"
+                              />
+                              <span className="text-sm leading-6 text-slate-600">
+                                I agree to the processing of my personal data for consultation routing and I have read the
+                                <a href="/legal/privacy-policy" className="ml-1 font-medium text-cyan underline underline-offset-2">
+                                  Privacy Policy
+                                </a>
+                                ,
+                                <a href="/legal/terms-of-service" className="ml-1 font-medium text-cyan underline underline-offset-2">
+                                  Terms of Service
+                                </a>
+                                , and
+                                <a href="/legal/cookie-policy" className="ml-1 font-medium text-cyan underline underline-offset-2">
+                                  Cookie Policy
+                                </a>
+                                .
+                              </span>
+                            </label>
+
                             <div className="flex gap-3 sm:gap-4 pt-2 sm:pt-4">
                               <button
                                 type="button"
@@ -556,7 +586,8 @@ export default function LeadCapture({
                                   loading ||
                                   !formData.name ||
                                   !formData.email ||
-                                  !isValidPhoneNumber(formData.phone)
+                                  !isValidPhoneNumber(formData.phone) ||
+                                  !hasConsent
                                 }
                                 className="group relative flex-[2] overflow-hidden rounded-full bg-brand-red py-3.5 sm:py-5 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-white shadow-xl transition disabled:opacity-50"
                               >

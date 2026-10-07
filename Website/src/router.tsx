@@ -20,6 +20,7 @@ import VendorProfilePage from "./components/VendorProfilePage";
 import ProviderDashboard from "./components/ProviderDashboard";
 import VendorPortal from "./components/VendorPortal";
 import AdminDashboard from "./components/AdminDashboard";
+import LegalPage from "./components/LegalPage";
 
 // Define the Outlet Context interface to share layout level States
 type LayoutCtx = {
@@ -344,6 +345,10 @@ export const router = createBrowserRouter([
             <VendorsPageRoute />
           </ClientProtectedRoute>
         ),
+      },
+      {
+        path: "legal/:page",
+        element: <LegalPage />,
       },
     ],
   },

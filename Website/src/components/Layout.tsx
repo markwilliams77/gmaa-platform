@@ -8,6 +8,7 @@ import LoginPage from "./LoginPage";
 import { useAuth } from "./AuthContext";
 import { Activity } from "lucide-react";
 import ClientOtpModal from "./ClientOtpModal";
+import CookieConsentBanner from "./CookieConsentBanner";
 
 export default function Layout() {
   const [portal, setPortal] = useState<"patient" | "vendor">("patient");
@@ -171,6 +172,8 @@ export default function Layout() {
         }}
       />
 
+      <CookieConsentBanner />
+
       <LeadCapture
         externalOpen={consultationContext.open}
         onClose={closeConsultation}
@@ -274,14 +277,31 @@ export default function Layout() {
                 </h4>
                 <ul className="space-y-2 text-sm text-navy/50 font-medium">
                   <li>
-                    <a href="#" className="hover:text-cyan transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/legal/terms-of-service")}
+                      className="hover:text-cyan transition-colors"
+                    >
                       Terms of Service
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-cyan transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/legal/privacy-policy")}
+                      className="hover:text-cyan transition-colors"
+                    >
                       Privacy Policy
-                    </a>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/legal/cookie-policy")}
+                      className="hover:text-cyan transition-colors"
+                    >
+                      Cookie Policy
+                    </button>
                   </li>
                   <li>
                     <a href="#" className="hover:text-cyan transition-colors">

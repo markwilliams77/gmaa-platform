@@ -22,7 +22,7 @@ import compression from "compression";
 import rateLimit from "express-rate-limit";
 import marketplaceSeederRoutes from "./routes/marketplaceSeeder.routes";
 import vendorCategoriesRoutes from "./routes/vendorCategories.routes";
-
+import { getCookieValue } from "./utils/cookies";
 
 const app = express();
 const limiter = rateLimit({
@@ -75,6 +75,13 @@ app.use(
 // 🔥 must-have
 app.options("/{*splat}", cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use((req, _res, next) => {
+  const csrfToken = getCookieValue(req.headers.cookie, "gmaa_csrf_token");
+  (req as any).csrfToken = csrfToken || null;
+  next();
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/registry", registryRoutes);

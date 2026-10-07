@@ -3,6 +3,24 @@ const API_BASE_URL =
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 type ApiResult<T> = { data: T };
 
+let csrfToken = '';
+
+export const setCsrfToken = (token?: string) => {
+  csrfToken = token || '';
+};
+
+const getCsrfToken = async () => {
+  if (!csrfToken) {
+    const response = await fetch(`${API_BASE_URL}/auth/csrf-token`, { credentials: 'include' });
+    if (response.ok) {
+      const data = await response.json();
+      csrfToken = data.csrfToken || '';
+    }
+  }
+
+  return csrfToken;
+};
+
 class ApiClientError extends Error {
   response?: { status: number; data: any };
 
@@ -14,18 +32,19 @@ class ApiClientError extends Error {
 }
 
 const request = async <T>(method: ApiMethod, path: string, body?: unknown): Promise<ApiResult<T>> => {
-  const token = localStorage.getItem('auth_token');
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  if (method !== 'GET') {
+    const token = await getCsrfToken();
+    if (token) headers['X-CSRF-Token'] = token;
   }
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers,
+    credentials: 'include',
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
@@ -44,10 +63,6 @@ const request = async <T>(method: ApiMethod, path: string, body?: unknown): Prom
   }
 
   if (!response.ok) {
-    if (response.status === 401) {
-      //localStorage.removeItem('auth_token');
-      //localStorage.removeItem('admin_user');
-    }
     throw new ApiClientError(data?.message || data?.error || response.statusText, response.status, data);
   }
 

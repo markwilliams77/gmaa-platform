@@ -94,6 +94,7 @@ export default function VendorOnboarding({
   onCancel: () => void;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [hasConsent, setHasConsent] = useState(false);
   const [formData, setFormData] = useState({
     orgName: "",
     country: "",
@@ -159,6 +160,8 @@ export default function VendorOnboarding({
 
   const nextStep = async () => {
     if (currentStep === 3) {
+      if (!hasConsent) return;
+
       try {
         console.log("Creating vendor onboarding...");
 
@@ -178,6 +181,7 @@ export default function VendorOnboarding({
           subCategory: formData.subCategory,
           specialties: formData.specialties,
           plan: formData.plan,
+          consentAccepted: true,
         });
 
         localStorage.setItem("vendorOnboardingId", onboarding.id);
@@ -895,6 +899,21 @@ export default function VendorOnboarding({
                           </p>
                         </div>
                       </div>
+
+                      <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <input
+                          type="checkbox"
+                          checked={hasConsent}
+                          onChange={(event) => setHasConsent(event.target.checked)}
+                          className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan focus:ring-cyan"
+                        />
+                        <span className="text-xs leading-6 text-slate-600">
+                          I authorize GMAA to process this organization and contact information for registration and verification, and agree to the
+                          <a href="/legal/privacy-policy" className="ml-1 font-semibold text-cyan underline underline-offset-2">Privacy Policy</a>,
+                          <a href="/legal/terms-of-service" className="ml-1 font-semibold text-cyan underline underline-offset-2">Terms of Service</a>, and
+                          <a href="/legal/cookie-policy" className="ml-1 font-semibold text-cyan underline underline-offset-2">Cookie Policy</a>.
+                        </span>
+                      </label>
                     </div>
                   )}
 
@@ -1018,6 +1037,7 @@ export default function VendorOnboarding({
 
                   <button
                     onClick={nextStep}
+                    disabled={currentStep === 3 && !hasConsent}
                     className="bg-navy text-white px-12 py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-navy/20 group"
                   >
                     {currentStep === 3 ? "Commit & Pay" : "Next Step"}

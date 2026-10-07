@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { setCsrfToken } from "./api";
 
 export const authService = {
   async login(username: string, password: string) {
@@ -10,6 +11,12 @@ export const authService = {
       }
     );
 
+    setCsrfToken(response.data.csrfToken);
+
     return response.data;
+  },
+
+  async logout() {
+    await api.post("/auth/logout", {});
   },
 };

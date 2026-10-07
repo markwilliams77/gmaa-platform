@@ -174,12 +174,13 @@ await systemService.purgeDemoData();
 
 ## Debugging
 
-### Check token is stored
+### Check the UI profile cache
 ```javascript
 // In browser console
-localStorage.getItem('auth_token')
 localStorage.getItem('admin_user')
 ```
+
+The authentication token is held in an HTTP-only cookie and is not readable from JavaScript.
 
 ### Check API calls
 ```javascript

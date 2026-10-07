@@ -1,7 +1,8 @@
 import express from "express";
 import { prisma } from "../configs/db";
 import { sendOTP, verifyOTP } from "../services/otpService";
-import { vendorLogin, adminLogin,resetVendorPassword,} from "../controllers/auth.controllers"; 
+import { adminLogin, getProfile, logout, vendorLogin } from "../controllers/auth.controllers";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
@@ -34,7 +35,27 @@ const getPhoneMatches = (rawPhone: string, normalizedPhone: string) => {
 router.post("/vendor-login", vendorLogin);
 router.post("/admin-login", adminLogin);
 router.post("/login", adminLogin);
-router.post( "/reset-vendor-password", resetVendorPassword );
+router.post("/logout", logout);
+router.get("/profile", authMiddleware, getProfile);
+router.get("/csrf-token", (req, res) => {
+  const existing = req.headers.cookie ? req.headers.cookie.split(";").map((item) => item.trim()).find((item) => item.startsWith("gmaa_csrf_token=")) : undefined;
+
+  if (existing) {
+    const [, value] = existing.split("=");
+    return res.json({ csrfToken: value });
+  }
+
+  const csrfToken = require("crypto").randomBytes(32).toString("hex");
+  res.cookie("gmaa_csrf_token", csrfToken, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  return res.json({ csrfToken });
+});
 
 router.post("/send-otp", async (req, res) => {
   const rawPhone = typeof req.body.phone === "string" ? req.body.phone.trim() : "";

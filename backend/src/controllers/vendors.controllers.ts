@@ -86,7 +86,12 @@ export const createVendorOnboarding = async (req: Request, res: Response) => {
       specialties,
 
       plan,
+      consentAccepted,
     } = req.body;
+
+    if (consentAccepted !== true) {
+      return res.status(400).json({ message: "Consent is required" });
+    }
 
     if (!orgName || typeof orgName !== "string") {
       return res.status(400).json({ message: "orgName is required" });
@@ -148,6 +153,8 @@ export const createVendorOnboarding = async (req: Request, res: Response) => {
         subCategory,
         specialties,
         plan,
+        consentAcceptedAt: new Date(),
+        consentPolicyVersion: "v1",
         status: "PAYMENT_PENDING",
       },
     });

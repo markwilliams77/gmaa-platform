@@ -117,37 +117,10 @@ The `token` is automatically stored in `localStorage` by the client and included
 The API client is configured with automatic token injection in `src/services/api/client.ts`:
 
 ```typescript
-import axios from 'axios';
+import api from '@/services/api/client';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
-export const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Automatically adds Bearer token to all requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Handles 401 errors and redirects to login
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+// The shared API client sends cookies and manages CSRF tokens.
+const { data } = await api.get('/tenders');
 ```
 
 ---
@@ -344,14 +317,14 @@ The axios interceptors automatically handle 401 errors and redirect to login whe
 
 ## Troubleshooting
 
-**Issue:** Token not being sent in requests
-- Check that token is stored in `localStorage` with key `auth_token`
-- Verify the axios interceptor is properly configured
+**Issue:** Session cookie not being sent in requests
+- Check that requests include credentials and the API's allowed-origin list includes the Admin origin
+- Verify that state-changing requests include the `X-CSRF-Token` header
 
 **Issue:** 401 Unauthorized errors
 - Generate new admin credentials
 - Verify `ADMIN_GENERATION_SECRET` is correct
-- Check token expiration
+- Check session expiration
 
 **Issue:** CORS errors in browser
 - Ensure `VITE_API_BASE_URL` matches your server URL

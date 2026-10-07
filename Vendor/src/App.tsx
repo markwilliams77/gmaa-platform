@@ -41,6 +41,7 @@ import {
 
 import LoginScreen from "./components/LoginScreen";
 import { vendorService } from "./services/vendorService";
+import { authService } from "./services/authService";
 
 // Components
 import Sidebar from "./components/Sidebar";
@@ -54,16 +55,25 @@ import AnalyticsView from "./components/AnalyticsView";
 import ProfileManagementView from "./components/ProfileManagementView";
 import SettingsView from "./components/SettingsView";
 import OrganizationProfileView from "./components/OrganizationVerification/OrganizationProfileView";
+
+const getStoredVendor = () => {
+  try {
+    const stored = localStorage.getItem("vendorData");
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    localStorage.removeItem("vendorData");
+    return null;
+  }
+};
+
 export default function App() {
   // Session authentication mock status (Logout toggles lock screen)
-  const storedVendor = localStorage.getItem("vendorData");
+  const storedVendor = getStoredVendor();
 
-  const [vendorData, setVendorData] = useState(
-    storedVendor ? JSON.parse(storedVendor) : null,
-  );
+  const [vendorData, setVendorData] = useState(storedVendor);
 
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("vendorToken"),
+    !!storedVendor,
   );
 
   const vendorName =
@@ -87,6 +97,9 @@ export default function App() {
       } catch (error) {
         console.log("Vendor not found");
         setIsApprovedVendor(false);
+        localStorage.removeItem("vendorData");
+        setVendorData(null);
+        setIsAuthenticated(false);
       }
     };
 
@@ -185,8 +198,13 @@ export default function App() {
   };
 
   // Simulate account portal termination
-  const handleLogout = () => {
-    localStorage.removeItem("vendorToken");
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Failed to end vendor session", error);
+    }
+
     localStorage.removeItem("vendorData");
 
     setVendorData(null);

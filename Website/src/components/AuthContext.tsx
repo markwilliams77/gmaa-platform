@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { backendApi } from '../services/backendApi';
 
 interface AuthContextType {
@@ -13,17 +13,50 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const readStoredValue = (key: string) => {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  } catch {
+    localStorage.removeItem(key);
+    return null;
+  }
+};
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(() => {
-    const saved = localStorage.getItem('gmaa_user');
-    return saved ? JSON.parse(saved) : null;
+    return readStoredValue('gmaa_user');
   });
   const [profile, setProfile] = useState<any | null>(() => {
-    const saved = localStorage.getItem('gmaa_profile');
-    return saved ? JSON.parse(saved) : null;
+    return readStoredValue('gmaa_profile');
   });
   const [loading, setLoading] = useState(false);
   const [error] = useState<Error | undefined>(undefined);
+
+  useEffect(() => {
+    let active = true;
+
+    backendApi.getProfile()
+      .then((sessionUser) => {
+        if (!active) return;
+        const sessionProfile = { role: sessionUser.role, ...sessionUser };
+        setUser(sessionUser);
+        setProfile(sessionProfile);
+        localStorage.setItem('gmaa_user', JSON.stringify(sessionUser));
+        localStorage.setItem('gmaa_profile', JSON.stringify(sessionProfile));
+      })
+      .catch(() => {
+        if (!active) return;
+        setUser(null);
+        setProfile(null);
+        localStorage.removeItem('gmaa_user');
+        localStorage.removeItem('gmaa_profile');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   //const setSimulationUser = async (newUser: any) => {
   const loginVendor = async (username: string, password: string) => { 
@@ -31,8 +64,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     try {
       const response = await backendApi.loginVendor(username, password);
-      localStorage.setItem('gmaa_token', response.token);
       localStorage.setItem('gmaa_user', JSON.stringify(response.vendor));
+      localStorage.setItem('gmaa_profile', JSON.stringify({ role: 'VENDOR', ...response.vendor }));
       
       setUser(response.vendor);
       setProfile({
@@ -49,8 +82,8 @@ const loginAdmin = async (email: string, password: string) => {
   try {
     const response = await backendApi.loginAdmin(email, password);
 
-    localStorage.setItem('gmaa_token', response.token);
     localStorage.setItem('gmaa_user', JSON.stringify(response.user));
+    localStorage.setItem('gmaa_profile', JSON.stringify({ role: 'ADMIN', ...response.user }));
 
     setUser(response.user);
     setProfile({
@@ -62,11 +95,17 @@ const loginAdmin = async (email: string, password: string) => {
   }
 };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     setProfile(null);
     localStorage.removeItem('gmaa_user');
     localStorage.removeItem('gmaa_profile');
+
+    try {
+      await backendApi.logout();
+    } catch (err) {
+      console.warn('Logout request failed gracefully', err);
+    }
   };
 
   return (
