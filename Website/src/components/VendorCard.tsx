@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { Star, MapPin, ArrowUpRight } from "lucide-react";
 import type { RegistryVendor } from "../types/registry";
+import FallbackImage from "./FallbackImage";
 
 export interface VendorCardProps extends RegistryVendor {
   onClick?: (id: string) => void;
@@ -58,10 +59,10 @@ export default function VendorCard({
 
         {/* Visual Anchor */}
         <div className="relative mb-6 sm:mb-10 overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] bg-slate-100 group-hover:scale-[1.02] transition-all duration-700">
-          <img
+          <FallbackImage
             src={image ?? undefined}
             alt={name}
-            referrerPolicy="no-referrer"
+            seed={id}
             className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-navy/40 via-transparent to-transparent" />

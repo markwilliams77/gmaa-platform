@@ -28,6 +28,7 @@ import { useAuth } from "./AuthContext";
 import { cn } from "../lib/utils";
 import { backendApi } from "../services/backendApi";
 import type { VendorProfile } from "../types/registry";
+import FallbackImage from "./FallbackImage";
 
 interface VendorProfilePageProps {
   vendorId: string;
@@ -117,11 +118,11 @@ export default function VendorProfilePage({
     <div className="min-h-screen bg-[#F8FAFC] overflow-x-hidden">
       {/* Header / Hero Section */}
       <div className="relative min-h-[500px] sm:min-h-[580px] h-auto lg:h-[72vh] flex items-center py-12 lg:py-0 overflow-hidden">
-        <img
+        <FallbackImage
           src={vendor.image ?? undefined}
           alt={vendor.name}
+          seed={vendorId}
           className="absolute inset-0 h-full w-full object-cover object-[58%_center] xl:object-center"
-          referrerPolicy="no-referrer"
         />
 
         <div className="absolute inset-0 bg-gradient-to-r from-[#071018] via-[#071018]/80 to-transparent" />
@@ -487,9 +488,10 @@ export default function VendorProfilePage({
                       onMouseLeave={() => setPauseSlideshow(false)}
                       className="relative h-[200px] sm:h-[260px] md:h-[320px] overflow-hidden rounded-2xl sm:rounded-[2rem] border border-slate-200 group"
                     >
-                      <img
+                      <FallbackImage
                         src={vendor.gallery[activeImage].imageUrl}
                         alt={vendor.gallery[activeImage].caption ?? "Facility"}
+                        seed={`${vendorId}-${vendor.gallery[activeImage].id}`}
                         className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent p-4 sm:p-6 md:p-8">
@@ -522,9 +524,10 @@ export default function VendorProfilePage({
                             : "border-slate-200"
                         } group cursor-pointer`}
                       >
-                        <img
+                        <FallbackImage
                           src={img.imageUrl}
                           alt={img.caption ?? `Gallery ${index + 1}`}
+                          seed={`${vendorId}-${img.id}`}
                           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       </motion.div>
